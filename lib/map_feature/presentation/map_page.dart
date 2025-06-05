@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../application/map_cubit.dart';
 import '../application/map_state.dart';
+import '../application/address_search_cubit.dart';
+import '../domain/address_suggestion_model.dart';
 import 'widgets/osm_map_widget.dart';
+import 'widgets/address_search_widget.dart';
 import '../../core/constants/k_sizes.dart';
 
 class MapPage extends StatelessWidget {
@@ -10,8 +13,15 @@ class MapPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MapCubit()..initialize(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => MapCubit()..initialize(),
+        ),
+        BlocProvider(
+          create: (context) => AddressSearchCubit(),
+        ),
+      ],
       child: const MapView(),
     );
   }
@@ -24,7 +34,7 @@ class MapView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Map'),
+        title: const Text('Adressefinder'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: BlocBuilder<MapCubit, MapState>(
@@ -36,6 +46,22 @@ class MapView extends StatelessWidget {
                 initialCenter: state.currentLocation,
                 markers: state.markers,
                 mapController: context.read<MapCubit>().mapController,
+                onMapTap: (latLng) {
+                  // Hide suggestions when map is tapped
+                  context.read<AddressSearchCubit>().hideSuggestions();
+                },
+              ),
+              
+              // Address search widget
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: AddressSearchWidget(
+                  onAddressSelected: (suggestion) {
+                    _onAddressSelected(context, suggestion);
+                  },
+                ),
               ),
               
               // Loading overlay for location
@@ -55,6 +81,14 @@ class MapView extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  void _onAddressSelected(BuildContext context, AddressSuggestion suggestion) {
+    // Navigate to selected address on map
+    context.read<MapCubit>().navigateToLocation(
+      suggestion.coordinates,
+      zoom: 16.0,
     );
   }
 }
