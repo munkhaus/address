@@ -1,0 +1,232 @@
+Flutter App Security & Compliance Ruleset (Developer Vulnerability Focus)
+This ruleset provides a checklist for testing Flutter applications, with a specific focus on vulnerabilities commonly introduced through developer errors during the development lifecycle.
+
+1. Secure Coding & Development Practices: Developer-Introduced Vulnerabilities
+[ ] Unprotected Release Builds due to Missing or Misconfigured Code Obfuscation:
+
+Developer Error: Failing to enable code obfuscation (flutter build <target> --obfuscate --split-debug-info) for release builds. This makes it significantly easier for attackers to reverse-engineer the app's Dart code, understand its logic, and find hardcoded secrets or vulnerabilities. (Source: Momentum, LIAPP)
+
+Developer Error: Incorrectly configuring obfuscation (e.g., overly aggressive settings without proper testing) leading to broken functionality if the app relies on specific class, method, or library names that get mangled. (Source: Momentum)
+
+[ ] Insufficient or Missing Input Validation (Client-Side & Server-Side):
+
+Developer Error: Neglecting to validate data from all external sources, including user-provided input (forms, free-text fields), API responses, deep link parameters, and inter-process communication (IPC) data.
+
+Developer Error: Implementing weak or incomplete validation logic. Examples:
+
+Relying solely on client-side validation, which can be easily bypassed by attackers.
+
+Using flawed regular expressions that don't cover all malicious patterns or can be bypassed.
+
+Creating conditional validation logic that attackers can circumvent.
+
+This can lead to injection vulnerabilities (SQL Injection, Cross-Site Scripting (XSS) if data is rendered in WebViews, Command Injection if inputs are used in system commands), path traversal, or data corruption. (Source: Touchlane, Strobes Security)
+
+Developer Error: Not properly handling character limits, data types (leading to type confusion or crashes), or edge cases (e.g., empty strings, null values, overly long inputs) in input fields, which can result in crashes or unexpected behavior exploitable by attackers. (Source: Testriq)
+
+[ ] Exposure of Sensitive Information Through Improper Error Handling:
+
+Developer Error: Designing error handling mechanisms that display detailed technical error messages to the end-user in production. This includes stack traces, raw database error messages, internal file paths, library versions, or specific server errors, all of which provide valuable reconnaissance information to attackers.
+
+Developer Error: Creating overly verbose custom error messages that inadvertently reveal too much about the application's internal state, logic, or data structures.
+
+[ ] Leakage of Sensitive Data or Debug Information in Release Builds:
+
+Developer Error: Forgetting to remove or disable debug flags (e.g., kDebugMode checks not properly isolating debug code), print() statements, developer.log() calls, or other development-specific code paths in production/release builds.
+
+Developer Error: Logging sensitive data such as passwords, PII (Personally Identifiable Information), API keys, session tokens, or financial details, even if logs are intended for internal use or remote logging services, as these can be inadvertently exposed or compromised. (Source: AppSec Articles, Duplex Technologies)
+
+[ ] Introduction of Vulnerabilities via Insecure Dependency Management:
+
+Developer Error: Using outdated third-party libraries, Flutter SDK versions, or native dependencies (e.g., Gradle plugins, CocoaPods) that contain known, publicly disclosed vulnerabilities. (Source: Touchlane, ValueCoders)
+
+Developer Error: Importing packages from untrusted or unverified sources (e.g., non-official pub.dev mirrors, direct Git repositories without scrutiny) or failing to vet package permissions and source code, potentially introducing malicious code or spyware. (Source: LIAPP, OWASP Top 10 For Flutter – M2)
+
+Developer Error: Not regularly reviewing or updating a Software Bill of Materials (SBOM), leading to a lack of awareness of vulnerabilities present in direct or transitive dependencies. (Source: AppSec Articles)
+
+[ ] Failure to Adhere to the Principle of Least Privilege:
+
+Developer Error: Writing code that grants excessive permissions to application components, user roles, or API keys beyond what is strictly necessary for their intended function. For example, an API key used for reading public data also having write permissions.
+
+[ ] Implementation of Flawed Business Logic Leading to Exploitable Loopholes:
+
+Developer Error: Misinterpreting business requirements or implementing application logic in a way that allows users to bypass intended workflows, access unauthorized features, or manipulate application state for unintended benefits. Examples:
+
+Manipulating product prices in an e-commerce app by intercepting and modifying requests.
+
+Bypassing payment steps or using features intended for premium users without payment.
+
+Gaining unauthorized approval for actions by exploiting logical flaws in state transitions.
+
+[ ] Increased Attack Surface Due to Unremoved Dead or Unused Code/Features:
+
+Developer Error: Leaving obsolete code, debug functionalities, commented-out sensitive information, or experimental features in the production codebase. These unmaintained parts can contain undiscovered vulnerabilities or be inadvertently re-enabled.
+
+2. Data Security: Developer-Introduced Vulnerabilities
+[ ] Insecure Local Storage of Sensitive Data:
+
+Developer Error: Using SharedPreferences or plain text files for storing any sensitive information such as API keys, user session tokens, PII, passwords, or encryption keys, making them easily accessible on rooted/jailbroken devices or via backup extraction. (Source: LIAPP, OWASP Top 10 For Flutter – M3, Digital.ai)
+
+Example: final prefs = await SharedPreferences.getInstance(); await prefs.setString('authToken', userToken); // VULNERABLE
+
+Developer Error: Hardcoding encryption keys directly in the Dart source code, storing them in easily discoverable configuration files bundled with the app, or using weak, predictable keys. (Source: Langate, Touchlane)
+
+Developer Error: Implementing weak or known-flawed custom encryption algorithms instead of relying on established, strong cryptographic libraries and algorithms like AES-256 (e.g., via encrypt package correctly configured).
+
+Developer Error: Storing unencrypted or weakly encrypted backups of sensitive application data locally on the device.
+
+[ ] Prolonged Retention or Unnecessary Caching of Sensitive Data in Memory:
+
+Developer Error: Failing to clear sensitive data (e.g., user credentials after authentication, cryptographic keys, decrypted PII) from memory variables as soon as it's no longer actively needed, increasing the window of opportunity for memory scraping attacks.
+
+Developer Error: Unnecessarily caching sensitive information in memory for performance reasons without proper safeguards (e.g., time-limited caching, secure clearing), making it more susceptible to exposure. (Source: AppSec Articles)
+
+[ ] Exposure of Sensitive Information via Background Snapshots:
+
+Developer Error: Not implementing platform-specific mechanisms (e.g., using WidgetsBindingObserver to detect app lifecycle changes and overlaying a generic view, or platform channels for FLAG_SECURE on Android) to prevent the OS from capturing screenshots containing sensitive information when the app is moved to the background. (Source: Touchlane, AppSec Articles)
+
+[ ] Leakage of Sensitive Data Through Insecure Clipboard Handling:
+
+Developer Error: Allowing sensitive data like passwords, OTPs, or API keys to be copied to the device clipboard without restriction, or failing to implement functionality to clear such data from the clipboard automatically after a short, defined period.
+
+[ ] Excessive Data Collection and Retention by Design:
+
+Developer Error: Designing application features or data entry forms that collect more personal or sensitive user data than is strictly necessary for the app's core functionality. (Source: OneClick IT Consultancy, OWASP Top 10 For Flutter – M6)
+
+Developer Error: Failing to implement data retention policies in code, leading to indefinite storage of user data that is no longer required.
+
+3. Authentication & Authorization: Developer-Introduced Vulnerabilities
+[ ] Implementation of Weak or Flawed Authentication Mechanisms:
+
+Developer Error: Building custom authentication logic without a deep understanding of security best practices, instead of using well-vetted, established solutions like OAuth 2.0, OpenID Connect, or Firebase Authentication. (Source: Touchlane, Quokka Labs)
+
+Developer Error: Enforcing weak password policies (e.g., no minimum length, no complexity requirements) or failing to implement server-side protections against brute-force or credential stuffing attacks (e.g., rate limiting, account lockout mechanisms, CAPTCHAs). (Source: Quokka Labs)
+
+Developer Error: Insecurely implementing Multi-Factor Authentication (MFA) in a way that it can be easily bypassed or doesn't properly validate secondary factors.
+
+Developer Error: Incorrectly using device-specific identifiers (e.g., IMEI, MAC address, advertising ID) as the sole or primary factor for user authentication, as these can often be spoofed or reset.
+
+Developer Error: Using non-cryptographically secure pseudo-random number generators (PRNGs) like dart:math's Random() for generating security-sensitive values such as One-Time Passwords (OTPs), password reset tokens, or verification codes, instead of Random.secure(). (Source: Zellic Research)
+
+[ ] Insecure Session Management Practices:
+
+Developer Error: Generating session tokens that are predictable, easily guessable, or have insufficient entropy.
+
+Developer Error: Transmitting session tokens over insecure channels (e.g., plain HTTP instead of HTTPS).
+
+Developer Error: Storing session tokens insecurely on the client-side (e.g., in SharedPreferences instead of flutter_secure_storage).
+
+Developer Error: Failing to implement proper session expiration policies (both for inactivity and absolute lifetime) or failing to provide a secure logout mechanism that reliably invalidates the session token on the server-side.
+
+Developer Error: Mishandling refresh tokens, such as storing them insecurely alongside access tokens, having overly long refresh token validity periods without proper revocation mechanisms, or transmitting them insecurely. (Source: AppSec Articles)
+
+[ ] Missing or Flawed Authorization Checks (Leading to BOLA/BFLA):
+
+Developer Error: Failing to implement robust, server-side authorization checks for every request that accesses resources or performs actions. Relying on client-side UI elements to control access is insecure as attackers can bypass the client and send direct requests to the backend. (Source: Strobes Security, OWASP Top 10 For Flutter – M3)
+
+Developer Error (Broken Object Level Authorization - BOLA): Allowing users to access specific data resources (e.g., another user's profile, a specific order) simply by manipulating an identifier in the request (e.g., GET /api/orders/{order_id_from_client}), without the server verifying that the authenticated user actually has permission to access that specific order_id.
+
+Developer Error (Broken Function Level Authorization - BFLA): Exposing API endpoints for privileged functions (e.g., admin actions, user deletion) without ensuring that the calling user has the necessary roles or permissions to execute that function. Attackers might discover these "hidden" admin endpoints and call them directly.
+
+[ ] Hardcoding of Credentials or Sensitive Keys:
+
+Developer Error: Embedding API keys, database credentials, third-party service passwords, encryption keys, or other secrets directly within the Dart source code, string literals, configuration files bundled with the app (e.g., assets), or build scripts. These can be easily extracted by decompiling the application binary. (Source: Touchlane, Duplex Technologies, AppSec Articles)
+
+Example: final String apiKey = "supersecretapikey_dont_do_this";
+
+4. Network Security: Developer-Introduced Vulnerabilities
+[ ] Use of Insecure Communication Channels or Weak TLS Configurations:
+
+Developer Error: Allowing the application to make network requests over plain HTTP for any communication, especially when sensitive data is involved, instead of strictly enforcing HTTPS for all endpoints. (Source: Langate, Quokka Labs)
+
+Developer Error: Implementing custom TLS/SSL certificate validation logic (e.g., in HttpClient.badCertificateCallback) that improperly accepts all certificates (e.g., return true;) for development convenience and forgetting to remove or secure this logic for production builds. This disables protection against MITM attacks. (Source: Strobes Security, MoldStud)
+
+Developer Error: Configuring the application or its backend server to support outdated and vulnerable TLS protocol versions (e.g., SSLv3, TLS 1.0, TLS 1.1) or weak cipher suites.
+
+[ ] Failure to Implement Certificate Pinning for Critical Connections:
+
+Developer Error: Not implementing certificate pinning for connections that handle highly sensitive data (e.g., financial transactions, login credentials). Without pinning, even with HTTPS, if a Certificate Authority is compromised or a malicious root certificate is installed on the user's device, MITM attacks can occur. (Source: LIAPP, Tillitsdone)
+
+[ ] Introduction of Common API Vulnerabilities in Client-Side Interaction Logic:
+
+Developer Error: While primary responsibility for API security lies server-side, developers can write client-side code that interacts with APIs insecurely. Examples:
+
+Failing to sanitize data received from APIs before processing or displaying it (if it contains user-generated content that could lead to client-side XSS in WebViews, for example).
+
+Designing client-side logic that requests or transmits excessive data fields to/from APIs, violating data minimization principles and increasing the impact of data breaches.
+
+Implementing client-side logic that incorrectly handles API error responses, potentially leading to information disclosure or application crashes.
+
+[ ] Lack of Mechanisms to Ensure Request/Response Integrity (Beyond TLS):
+
+Developer Error: In specific high-security scenarios, failing to implement additional measures (e.g., request signing, checksums for critical data elements) if the use case requires verifying that data exchanged with the server hasn't been tampered with, even within a TLS tunnel. This is less common but can be a developer oversight if required.
+
+5. Platform & Third-Party Security: Developer-Introduced Vulnerabilities
+[ ] Absence or Ineffective Implementation of Root/Jailbreak Detection:
+
+Developer Error: Not including libraries (e.g., flutter_jailbreak_detection, freerasp) or custom platform channel calls to check for device integrity (rooted Android devices or jailbroken iOS devices). (Source: Momentum, AppSec Articles)
+
+Developer Error: Implementing detection but having no meaningful defensive action (e.g., limiting functionality, terminating the app, alerting the user/server) or an action that is easily bypassable by attackers.
+
+[ ] Failure to Detect or Appropriately Respond to Emulator/Simulator Usage:
+
+Developer Error: Not implementing emulator/simulator detection when the application's security model assumes it is running on a physical, non-virtualized device (e.g., for certain anti-fraud measures, or if emulator usage might facilitate easier reverse engineering or abuse). (Source: Tillitsdone)
+
+[ ] Lack of Protection Against Screen Recording and Overlay Attacks:
+
+Developer Error: Not utilizing platform-specific mechanisms (e.g., setting FLAG_SECURE on Android Activities via platform channels, or equivalent iOS protections) to prevent screen capture, screen sharing, or malicious overlays on screens displaying highly sensitive information like passwords, OTPs, or financial details.
+
+[ ] Requesting Excessive or Unnecessary Platform Permissions:
+
+Developer Error: Configuring the AndroidManifest.xml (Android) or Info.plist (iOS) to request broad permissions (e.g., location, contacts, microphone, camera, storage) that are not strictly required for the app's core functionality, increasing the potential impact if the app is compromised. (Source: AppSec Articles)
+
+Developer Error: Requesting all potentially needed permissions on app startup rather than implementing contextual permission requests (i.e., asking for permission only when the specific feature needing it is accessed by the user).
+
+[ ] Introduction of Vulnerabilities in Custom Native Code (Platform Channels/Plugins):
+
+Developer Error: Writing insecure Kotlin/Java code for Android or Swift/Objective-C code for iOS within custom Flutter plugins or when using platform channels. This native code can introduce vulnerabilities not present in the Dart layer, such as native memory corruption issues (buffer overflows), insecure file handling, or insecure inter-process communication.
+
+[ ] Insecure Configuration and Usage of WebViews:
+
+Developer Error: Enabling unrestricted JavaScript execution (javascriptMode: JavascriptMode.unrestricted) in WebViews that load untrusted or semi-trusted web content, creating a risk of Cross-Site Scripting (XSS) attacks if the loaded content is malicious. (Source: ResearchGate PDF, Senselearner)
+
+Developer Error: Allowing WebViews to access local files via file:// URLs without strict validation and controls, potentially exposing sensitive local application data or device files to web content. (Source: ResearchGate PDF)
+
+Developer Error: Implementing insecure JavaScript bridges (e.g., using addJavascriptChannel without proper message validation or exposing sensitive native functions to JavaScript) which could allow malicious JavaScript in the WebView to call sensitive Dart functions or exfiltrate data.
+
+Developer Error: Failing to set an appropriate Content-Security-Policy (CSP) HTTP header (or meta tag) for content loaded within WebViews to restrict the capabilities of the web content (e.g., disallowing inline scripts, restricting domains scripts can be loaded from).
+
+Developer Error: Not keeping the webview_flutter plugin (or other WebView plugins) updated to the latest version, which might contain security patches.
+
+6. Compliance & Privacy (GDPR, CCPA, etc.): Developer-Introduced Vulnerabilities
+[ ] Flawed Implementation of User Consent Mechanisms:
+
+Developer Error: Failing to implement clear, granular, and easily withdrawable user consent mechanisms before collecting or processing any personal data. For example, pre-ticking consent boxes or bundling consent for multiple purposes. (Source: Singular, OneClick IT Consultancy)
+
+Developer Error: Writing code that tracks users, collects personal data, or initializes third-party tracking SDKs before obtaining explicit and informed user consent.
+
+[ ] Failure to Implement Functionality for Data Subject Rights (DSR):
+
+Developer Error: Not building the necessary technical features within the app or its backend to allow users to easily exercise their rights to access, rectify (correct), or request deletion (erasure) of their personal data as required by regulations like GDPR. (Source: OneClick IT Consultancy)
+
+[ ] Improper Integration of Third-Party SDKs Regarding User Consent and Data Sharing:
+
+Developer Error: Incorrectly passing user consent status (opt-in/opt-out signals) to third-party SDKs (e.g., for analytics, advertising, crash reporting) that process personal data. For example, initializing an ad SDK with full tracking capabilities even if the user has opted out of personalized ads. (Source: Singular)
+
+Developer Error: Integrating SDKs without understanding what data they collect, how they process it, or with whom they share it, thus inadvertently violating privacy commitments.
+
+7. Testing & Auditing: Developer-Related Shortcomings
+[ ] Lack of Security-Focused Automated Tests:
+
+Developer Error: Not writing unit tests, widget tests, or integration tests that specifically cover security-sensitive logic. This includes tests for input validation routines, authentication flows, authorization checks on mock data, and correct handling of error conditions related to security. (Source: Touchlane)
+
+8. Runtime Application Self-Protection (RASP): Developer Implementation Gaps
+[ ] Failure to Implement or Configure RASP Measures Effectively:
+
+Developer Error: Not integrating RASP libraries or custom checks designed to detect runtime threats like tampering, repackaging, running on rooted/jailbroken devices, emulator usage, or debugger attachment. (Source: AppSec Articles, Talsec)
+
+Developer Error: Misconfiguring RASP solutions such that they don't effectively detect known threats or, conversely, produce too many false positives, leading to them being ignored or disabled.
+
+Developer Error: Implementing RASP detection mechanisms but failing to define or trigger meaningful defensive actions (e.g., terminating the app, wiping sensitive data, alerting a backend server) when a threat is detected.
+
+Disclaimer: This ruleset is a general guideline and may need to be adapted based on your specific application's functionality, the data it handles, and the regulatory requirements applicable to your industry and region. It's recommended to consult with security professionals for comprehensive testing.
