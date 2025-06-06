@@ -21,6 +21,12 @@ mixin _$MapState {
   List<Marker> get markers => throw _privateConstructorUsedError;
   bool get isLoadingTiles => throw _privateConstructorUsedError;
   LatLng? get selectedLocation => throw _privateConstructorUsedError;
+  DataState<RouteModel> get routeState => throw _privateConstructorUsedError;
+  LatLng? get routeStartPoint => throw _privateConstructorUsedError;
+  LatLng? get routeEndPoint => throw _privateConstructorUsedError;
+  List<Polyline> get routeLines => throw _privateConstructorUsedError;
+  bool get isStartPointCurrentLocation => throw _privateConstructorUsedError;
+  bool get isEndPointCurrentLocation => throw _privateConstructorUsedError;
 
   /// Create a copy of MapState
   /// with the given fields replaced by the non-null parameter values.
@@ -39,9 +45,16 @@ abstract class $MapStateCopyWith<$Res> {
     List<Marker> markers,
     bool isLoadingTiles,
     LatLng? selectedLocation,
+    DataState<RouteModel> routeState,
+    LatLng? routeStartPoint,
+    LatLng? routeEndPoint,
+    List<Polyline> routeLines,
+    bool isStartPointCurrentLocation,
+    bool isEndPointCurrentLocation,
   });
 
   $DataStateCopyWith<LatLng, $Res> get locationState;
+  $DataStateCopyWith<RouteModel, $Res> get routeState;
 }
 
 /// @nodoc
@@ -63,6 +76,12 @@ class _$MapStateCopyWithImpl<$Res, $Val extends MapState>
     Object? markers = null,
     Object? isLoadingTiles = null,
     Object? selectedLocation = freezed,
+    Object? routeState = null,
+    Object? routeStartPoint = freezed,
+    Object? routeEndPoint = freezed,
+    Object? routeLines = null,
+    Object? isStartPointCurrentLocation = null,
+    Object? isEndPointCurrentLocation = null,
   }) {
     return _then(
       _value.copyWith(
@@ -82,6 +101,30 @@ class _$MapStateCopyWithImpl<$Res, $Val extends MapState>
                 ? _value.selectedLocation
                 : selectedLocation // ignore: cast_nullable_to_non_nullable
                       as LatLng?,
+            routeState: null == routeState
+                ? _value.routeState
+                : routeState // ignore: cast_nullable_to_non_nullable
+                      as DataState<RouteModel>,
+            routeStartPoint: freezed == routeStartPoint
+                ? _value.routeStartPoint
+                : routeStartPoint // ignore: cast_nullable_to_non_nullable
+                      as LatLng?,
+            routeEndPoint: freezed == routeEndPoint
+                ? _value.routeEndPoint
+                : routeEndPoint // ignore: cast_nullable_to_non_nullable
+                      as LatLng?,
+            routeLines: null == routeLines
+                ? _value.routeLines
+                : routeLines // ignore: cast_nullable_to_non_nullable
+                      as List<Polyline>,
+            isStartPointCurrentLocation: null == isStartPointCurrentLocation
+                ? _value.isStartPointCurrentLocation
+                : isStartPointCurrentLocation // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            isEndPointCurrentLocation: null == isEndPointCurrentLocation
+                ? _value.isEndPointCurrentLocation
+                : isEndPointCurrentLocation // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -94,6 +137,16 @@ class _$MapStateCopyWithImpl<$Res, $Val extends MapState>
   $DataStateCopyWith<LatLng, $Res> get locationState {
     return $DataStateCopyWith<LatLng, $Res>(_value.locationState, (value) {
       return _then(_value.copyWith(locationState: value) as $Val);
+    });
+  }
+
+  /// Create a copy of MapState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $DataStateCopyWith<RouteModel, $Res> get routeState {
+    return $DataStateCopyWith<RouteModel, $Res>(_value.routeState, (value) {
+      return _then(_value.copyWith(routeState: value) as $Val);
     });
   }
 }
@@ -112,10 +165,18 @@ abstract class _$$MapStateImplCopyWith<$Res>
     List<Marker> markers,
     bool isLoadingTiles,
     LatLng? selectedLocation,
+    DataState<RouteModel> routeState,
+    LatLng? routeStartPoint,
+    LatLng? routeEndPoint,
+    List<Polyline> routeLines,
+    bool isStartPointCurrentLocation,
+    bool isEndPointCurrentLocation,
   });
 
   @override
   $DataStateCopyWith<LatLng, $Res> get locationState;
+  @override
+  $DataStateCopyWith<RouteModel, $Res> get routeState;
 }
 
 /// @nodoc
@@ -136,6 +197,12 @@ class __$$MapStateImplCopyWithImpl<$Res>
     Object? markers = null,
     Object? isLoadingTiles = null,
     Object? selectedLocation = freezed,
+    Object? routeState = null,
+    Object? routeStartPoint = freezed,
+    Object? routeEndPoint = freezed,
+    Object? routeLines = null,
+    Object? isStartPointCurrentLocation = null,
+    Object? isEndPointCurrentLocation = null,
   }) {
     return _then(
       _$MapStateImpl(
@@ -155,6 +222,30 @@ class __$$MapStateImplCopyWithImpl<$Res>
             ? _value.selectedLocation
             : selectedLocation // ignore: cast_nullable_to_non_nullable
                   as LatLng?,
+        routeState: null == routeState
+            ? _value.routeState
+            : routeState // ignore: cast_nullable_to_non_nullable
+                  as DataState<RouteModel>,
+        routeStartPoint: freezed == routeStartPoint
+            ? _value.routeStartPoint
+            : routeStartPoint // ignore: cast_nullable_to_non_nullable
+                  as LatLng?,
+        routeEndPoint: freezed == routeEndPoint
+            ? _value.routeEndPoint
+            : routeEndPoint // ignore: cast_nullable_to_non_nullable
+                  as LatLng?,
+        routeLines: null == routeLines
+            ? _value._routeLines
+            : routeLines // ignore: cast_nullable_to_non_nullable
+                  as List<Polyline>,
+        isStartPointCurrentLocation: null == isStartPointCurrentLocation
+            ? _value.isStartPointCurrentLocation
+            : isStartPointCurrentLocation // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        isEndPointCurrentLocation: null == isEndPointCurrentLocation
+            ? _value.isEndPointCurrentLocation
+            : isEndPointCurrentLocation // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -168,7 +259,14 @@ class _$MapStateImpl extends _MapState {
     final List<Marker> markers = const [],
     this.isLoadingTiles = false,
     this.selectedLocation,
+    this.routeState = const DataState.idle(),
+    this.routeStartPoint,
+    this.routeEndPoint,
+    final List<Polyline> routeLines = const [],
+    this.isStartPointCurrentLocation = false,
+    this.isEndPointCurrentLocation = false,
   }) : _markers = markers,
+       _routeLines = routeLines,
        super._();
 
   @override
@@ -188,10 +286,32 @@ class _$MapStateImpl extends _MapState {
   final bool isLoadingTiles;
   @override
   final LatLng? selectedLocation;
+  @override
+  @JsonKey()
+  final DataState<RouteModel> routeState;
+  @override
+  final LatLng? routeStartPoint;
+  @override
+  final LatLng? routeEndPoint;
+  final List<Polyline> _routeLines;
+  @override
+  @JsonKey()
+  List<Polyline> get routeLines {
+    if (_routeLines is EqualUnmodifiableListView) return _routeLines;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_routeLines);
+  }
+
+  @override
+  @JsonKey()
+  final bool isStartPointCurrentLocation;
+  @override
+  @JsonKey()
+  final bool isEndPointCurrentLocation;
 
   @override
   String toString() {
-    return 'MapState(locationState: $locationState, markers: $markers, isLoadingTiles: $isLoadingTiles, selectedLocation: $selectedLocation)';
+    return 'MapState(locationState: $locationState, markers: $markers, isLoadingTiles: $isLoadingTiles, selectedLocation: $selectedLocation, routeState: $routeState, routeStartPoint: $routeStartPoint, routeEndPoint: $routeEndPoint, routeLines: $routeLines, isStartPointCurrentLocation: $isStartPointCurrentLocation, isEndPointCurrentLocation: $isEndPointCurrentLocation)';
   }
 
   @override
@@ -205,7 +325,28 @@ class _$MapStateImpl extends _MapState {
             (identical(other.isLoadingTiles, isLoadingTiles) ||
                 other.isLoadingTiles == isLoadingTiles) &&
             (identical(other.selectedLocation, selectedLocation) ||
-                other.selectedLocation == selectedLocation));
+                other.selectedLocation == selectedLocation) &&
+            (identical(other.routeState, routeState) ||
+                other.routeState == routeState) &&
+            (identical(other.routeStartPoint, routeStartPoint) ||
+                other.routeStartPoint == routeStartPoint) &&
+            (identical(other.routeEndPoint, routeEndPoint) ||
+                other.routeEndPoint == routeEndPoint) &&
+            const DeepCollectionEquality().equals(
+              other._routeLines,
+              _routeLines,
+            ) &&
+            (identical(
+                  other.isStartPointCurrentLocation,
+                  isStartPointCurrentLocation,
+                ) ||
+                other.isStartPointCurrentLocation ==
+                    isStartPointCurrentLocation) &&
+            (identical(
+                  other.isEndPointCurrentLocation,
+                  isEndPointCurrentLocation,
+                ) ||
+                other.isEndPointCurrentLocation == isEndPointCurrentLocation));
   }
 
   @override
@@ -215,6 +356,12 @@ class _$MapStateImpl extends _MapState {
     const DeepCollectionEquality().hash(_markers),
     isLoadingTiles,
     selectedLocation,
+    routeState,
+    routeStartPoint,
+    routeEndPoint,
+    const DeepCollectionEquality().hash(_routeLines),
+    isStartPointCurrentLocation,
+    isEndPointCurrentLocation,
   );
 
   /// Create a copy of MapState
@@ -232,6 +379,12 @@ abstract class _MapState extends MapState {
     final List<Marker> markers,
     final bool isLoadingTiles,
     final LatLng? selectedLocation,
+    final DataState<RouteModel> routeState,
+    final LatLng? routeStartPoint,
+    final LatLng? routeEndPoint,
+    final List<Polyline> routeLines,
+    final bool isStartPointCurrentLocation,
+    final bool isEndPointCurrentLocation,
   }) = _$MapStateImpl;
   const _MapState._() : super._();
 
@@ -243,6 +396,18 @@ abstract class _MapState extends MapState {
   bool get isLoadingTiles;
   @override
   LatLng? get selectedLocation;
+  @override
+  DataState<RouteModel> get routeState;
+  @override
+  LatLng? get routeStartPoint;
+  @override
+  LatLng? get routeEndPoint;
+  @override
+  List<Polyline> get routeLines;
+  @override
+  bool get isStartPointCurrentLocation;
+  @override
+  bool get isEndPointCurrentLocation;
 
   /// Create a copy of MapState
   /// with the given fields replaced by the non-null parameter values.

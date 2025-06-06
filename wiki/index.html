@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSM Address Finder - Developer Documentation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .intro {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .doc-category {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+        }
+        
+        .tutorial { border-left-color: #28a745; }
+        .how-to { border-left-color: #007bff; }
+        .reference { border-left-color: #6f42c1; }
+        .explanation { border-left-color: #fd7e14; }
+        
+        .doc-category h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .doc-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .doc-list li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .doc-list a {
+            color: #333;
+            text-decoration: none;
+            padding: 0.5rem;
+            display: block;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        .doc-list a:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            background: #d4edda;
+            color: #155724;
+            margin-left: 0.5rem;
+        }
+        
+        .icon {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🗺️ OSM Address Finder</h1>
+        <p>Developer Documentation</p>
+        <div class="status-badge">Phase 1 & 2 Implemented ✅</div>
+    </div>
+
+    <div class="intro">
+        <h2>Welcome to the Developer Documentation</h2>
+        <p>This documentation follows the <strong>Diátaxis framework</strong> to provide structured, purpose-driven content:</p>
+        <ul>
+            <li><strong>Tutorials:</strong> Learning-oriented guides to get started</li>
+            <li><strong>How-to Guides:</strong> Goal-oriented instructions for specific tasks</li>
+            <li><strong>Reference:</strong> Technical specifications and information</li>
+            <li><strong>Explanation:</strong> Understanding-oriented discussions</li>
+        </ul>
+        <p><strong>Tech Stack:</strong> Flutter 3.32.0 • Clean Architecture • BLoC State Management • OpenStreetMap</p>
+    </div>
+
+    <div class="doc-grid">
+        <div class="doc-category tutorial">
+            <h3>📚 Tutorials</h3>
+            <p>Step-by-step learning guides for beginners</p>
+            <ul class="doc-list">
+                <li><a href="getting-started.html"><span class="icon">🚀</span>Getting Started Guide</a></li>
+                <li><a href="your-first-feature.html"><span class="icon">✨</span>Building Your First Feature</a></li>
+                <li><a href="understanding-clean-architecture.html"><span class="icon">🏗️</span>Understanding Clean Architecture</a></li>
+            </ul>
+        </div>
+
+        <div class="doc-category how-to">
+            <h3>🛠️ How-to Guides</h3>
+            <p>Problem-solving guides for specific tasks</p>
+            <ul class="doc-list">
+                <li><a href="how-to-setup-development.html"><span class="icon">⚙️</span>Setup Development Environment</a></li>
+                <li><a href="how-to-add-new-service.html"><span class="icon">🔧</span>Add a New Service</a></li>
+                <li><a href="how-to-implement-cubit.html"><span class="icon">📊</span>Implement a New Cubit</a></li>
+                <li><a href="how-to-debug-common-issues.html"><span class="icon">🐛</span>Debug Common Issues</a></li>
+                <li><a href="how-to-test-features.html"><span class="icon">🧪</span>Test Your Features</a></li>
+            </ul>
+        </div>
+
+        <div class="doc-category reference">
+            <h3>📖 Reference</h3>
+            <p>Technical specifications and API documentation</p>
+            <ul class="doc-list">
+                <li><a href="architecture-reference.html"><span class="icon">🏛️</span>Architecture Reference</a></li>
+                <li><a href="api-reference.html"><span class="icon">🌐</span>API Reference</a></li>
+                <li><a href="data-models.html"><span class="icon">📊</span>Data Models</a></li>
+                <li><a href="codebase-structure.html"><span class="icon">📁</span>Codebase Structure</a></li>
+                <li><a href="dependencies.html"><span class="icon">📦</span>Dependencies & Tech Stack</a></li>
+                <li><a href="coding-standards.html"><span class="icon">📋</span>Coding Standards</a></li>
+            </ul>
+        </div>
+
+        <div class="doc-category explanation">
+            <h3>💡 Explanation</h3>
+            <p>Understanding key concepts and design decisions</p>
+            <ul class="doc-list">
+                <li><a href="why-clean-architecture.html"><span class="icon">🤔</span>Why Clean Architecture?</a></li>
+                <li><a href="state-management-approach.html"><span class="icon">🔄</span>State Management Approach</a></li>
+                <li><a href="error-handling-strategy.html"><span class="icon">⚠️</span>Error Handling Strategy</a></li>
+                <li><a href="design-decisions.html"><span class="icon">💭</span>Key Design Decisions</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="intro">
+        <h2>🚀 Quick Start</h2>
+        <p>New to the project? Start with the <a href="getting-started.html"><strong>Getting Started Guide</strong></a> to set up your development environment and understand the project structure.</p>
+        
+        <h2>📋 Current Implementation Status</h2>
+        <ul>
+            <li><strong>Phase 1 - Interactive Map:</strong> ✅ Complete (OSM integration, location services, map controls)</li>
+            <li><strong>Phase 2 - Address Search:</strong> ✅ Complete (debounced search, Nominatim API, result navigation)</li>
+            <li><strong>Phase 3 - Route Planning:</strong> 🔄 Planned</li>
+            <li><strong>Phase 4 - Offline Support:</strong> 🔄 Planned</li>
+        </ul>
+    </div>
+
+    <footer style="text-align: center; padding: 2rem; color: #666; border-top: 1px solid #eee; margin-top: 2rem;">
+        <p>OSM Address Finder - Developer Documentation</p>
+        <p>Built with ❤️ using Flutter & Clean Architecture</p>
+        <p>Last Updated: <span id="lastUpdated"></span></p>
+    </footer>
+
+    <script>
+        document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString();
+    </script>
+</body>
+</html> 

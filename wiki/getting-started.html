@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started - OSM Address Finder</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .nav-links a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+        
+        .nav-links a:hover {
+            background: #e9ecef;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        .prereq-list {
+            background: #e8f5e8;
+            padding: 1rem;
+            border-radius: 5px;
+            border-left: 4px solid #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Getting Started Guide</h1>
+        <p>Tutorial: Set up your development environment and run the OSM Address Finder app</p>
+    </div>
+
+    <div class="content">
+        <h2>Welcome to OSM Address Finder!</h2>
+        <p>This tutorial will guide you through setting up the development environment and getting the app running on your machine. By the end of this guide, you'll have:</p>
+        <ul>
+            <li>✅ Flutter development environment configured</li>
+            <li>✅ Project dependencies installed</li>
+            <li>✅ App running on your device/simulator</li>
+            <li>✅ Understanding of the project structure</li>
+        </ul>
+
+        <div class="highlight">
+            <strong>Time to Complete:</strong> 15-30 minutes<br>
+            <strong>Skill Level:</strong> Beginner<br>
+            <strong>Prerequisites:</strong> Basic command line knowledge
+        </div>
+
+        <h2>Prerequisites</h2>
+        <div class="prereq-list">
+            <h3>Required Tools</h3>
+            <ul>
+                <li><strong>Flutter SDK:</strong> 3.32.0 or higher</li>
+                <li><strong>Git:</strong> For version control</li>
+                <li><strong>IDE:</strong> VS Code, Android Studio, or IntelliJ IDEA</li>
+            </ul>
+            
+            <h3>Platform-Specific Requirements</h3>
+            <ul>
+                <li><strong>iOS Development:</strong> macOS with Xcode 16.4+</li>
+                <li><strong>Android Development:</strong> Android SDK 35.0.1+</li>
+            </ul>
+        </div>
+
+        <h2>Step 1: Install Flutter</h2>
+        <div class="step">
+            <strong>If you don't have Flutter installed yet:</strong>
+            <p>Visit <a href="https://flutter.dev/docs/get-started/install" target="_blank">flutter.dev/docs/get-started/install</a> and follow the installation guide for your operating system.</p>
+        </div>
+
+        <p>Verify your Flutter installation:</p>
+        <div class="code-block">
+flutter --version
+flutter doctor
+        </div>
+
+        <p>The output should show Flutter 3.32.0 or higher. Run <code>flutter doctor</code> to check for any missing dependencies.</p>
+
+        <h2>Step 2: Clone the Repository</h2>
+        <div class="step">
+            <p>Clone the project repository to your local machine:</p>
+        </div>
+
+        <div class="code-block">
+# Clone the repository
+git clone https://github.com/your-username/osm-address-finder.git
+cd osm-address-finder
+
+# Check the current directory structure
+ls -la
+        </div>
+
+        <p>You should see the Flutter project structure with <code>lib/</code>, <code>pubspec.yaml</code>, and other Flutter project files.</p>
+
+        <h2>Step 3: Install Dependencies</h2>
+        <div class="step">
+            <p>Install all required packages and dependencies:</p>
+        </div>
+
+        <div class="code-block">
+# Install dependencies
+flutter pub get
+
+# Generate code (Freezed models)
+dart run build_runner build --delete-conflicting-outputs
+        </div>
+
+        <div class="highlight">
+            <strong>What's happening here?</strong><br>
+            • <code>flutter pub get</code> downloads all packages listed in pubspec.yaml<br>
+            • <code>build_runner</code> generates immutable data classes using Freezed annotations
+        </div>
+
+        <h2>Step 4: Set Up Your Device</h2>
+        <div class="step">
+            <p>Choose one option for running the app:</p>
+        </div>
+
+        <h3>Option A: Android Device/Emulator</h3>
+        <div class="code-block">
+# List available devices
+flutter devices
+
+# Start Android emulator (if not running)
+flutter emulators --launch &lt;emulator_id&gt;
+        </div>
+
+        <h3>Option B: iOS Simulator (macOS only)</h3>
+        <div class="code-block">
+# Open iOS Simulator
+open -a Simulator
+
+# List available simulators
+xcrun simctl list devices
+        </div>
+
+        <h2>Step 5: Run the App</h2>
+        <div class="step">
+            <p>Launch the OSM Address Finder app:</p>
+        </div>
+
+        <div class="code-block">
+# Run in debug mode with hot reload
+flutter run --hot
+
+# Or run in release mode
+flutter run --release
+        </div>
+
+        <div class="highlight">
+            <strong>Expected Result:</strong> The app should launch showing an interactive map centered on Denmark with a search bar at the top. You can pan/zoom the map and search for addresses.
+        </div>
+
+        <h2>Step 6: Test Core Features</h2>
+        <div class="step">
+            <p>Verify the app is working correctly by testing these features:</p>
+        </div>
+
+        <h3>Map Interaction</h3>
+        <ul>
+            <li>✅ Pan the map by dragging</li>
+            <li>✅ Zoom in/out using pinch gestures or buttons</li>
+            <li>✅ Double-tap to zoom in</li>
+        </ul>
+
+        <h3>Address Search</h3>
+        <ul>
+            <li>✅ Type in the search bar (e.g., "Copenhagen")</li>
+            <li>✅ Wait for suggestions to appear</li>
+            <li>✅ Tap a suggestion to navigate to the location</li>
+            <li>✅ Verify a red marker appears at the selected location</li>
+        </ul>
+
+        <h3>Location Services</h3>
+        <ul>
+            <li>✅ Tap the location button (if available)</li>
+            <li>✅ Grant location permission when prompted</li>
+            <li>✅ Verify map centers on your current location</li>
+        </ul>
+
+        <h2>Understanding the Project Structure</h2>
+        <div class="step">
+            <p>Now that the app is running, let's explore the codebase structure:</p>
+        </div>
+
+        <div class="code-block">
+lib/
+├── core/                     # Shared utilities and constants
+│   ├── constants/
+│   │   └── k_sizes.dart     # UI measurement constants
+│   └── utils/
+│       ├── data_state.dart  # Async state wrapper
+│       ├── result.dart      # Custom Result&lt;T,E&gt; type
+│       └── service_locator.dart # Dependency injection
+├── map_feature/             # Main feature: address search & mapping
+│   ├── application/         # State management (Cubit)
+│   ├── domain/             # Business logic and models
+│   ├── infrastructure/     # External services (API, GPS)
+│   └── presentation/       # UI widgets and pages
+└── main.dart               # App entry point
+        </div>
+
+        <h2>Next Steps</h2>
+        <div class="step">
+            <p>Congratulations! You now have the OSM Address Finder running locally. Here's what to explore next:</p>
+        </div>
+
+        <ul>
+            <li><strong>Architecture:</strong> Learn about <a href="understanding-clean-architecture.html">Clean Architecture</a> used in this project</li>
+            <li><strong>Build Features:</strong> Follow the <a href="your-first-feature.html">Building Your First Feature</a> tutorial</li>
+            <li><strong>Debugging:</strong> Check out <a href="how-to-debug-common-issues.html">common debugging techniques</a></li>
+            <li><strong>Code Standards:</strong> Review our <a href="coding-standards.html">coding standards and conventions</a></li>
+        </ul>
+
+        <h2>Troubleshooting</h2>
+        <div class="step">
+            <p>Having issues? Here are solutions to common problems:</p>
+        </div>
+
+        <h3>Build Runner Issues</h3>
+        <div class="code-block">
+# Clear generated files and rebuild
+flutter clean
+flutter pub get
+dart run build_runner clean
+dart run build_runner build --delete-conflicting-outputs
+        </div>
+
+        <h3>iOS Build Issues</h3>
+        <div class="code-block">
+# Navigate to iOS directory and install pods
+cd ios
+pod install
+cd ..
+flutter run
+        </div>
+
+        <h3>Android Build Issues</h3>
+        <ul>
+            <li>Verify Android SDK and build tools are updated</li>
+            <li>Check that Android licenses are accepted: <code>flutter doctor --android-licenses</code></li>
+            <li>Ensure minimum SDK version is 21+</li>
+        </ul>
+
+        <h3>Location Permission Issues</h3>
+        <ul>
+            <li><strong>iOS:</strong> Check Info.plist has location usage descriptions</li>
+            <li><strong>Android:</strong> Verify AndroidManifest.xml has location permissions</li>
+            <li>Grant location permissions manually in device settings if needed</li>
+        </ul>
+
+        <div class="nav-links">
+            <a href="index.html">← Back to Documentation</a>
+            <a href="your-first-feature.html">Next: Build Your First Feature →</a>
+        </div>
+    </div>
+</body>
+</html> 

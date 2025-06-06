@@ -6,6 +6,7 @@ class OsmMapWidget extends StatefulWidget {
   final LatLng? initialCenter;
   final double initialZoom;
   final List<Marker> markers;
+  final List<Polyline> polylines;
   final Function(LatLng)? onMapTap;
   final Function(LatLng)? onMapLongPress;
   final MapController? mapController;
@@ -15,6 +16,7 @@ class OsmMapWidget extends StatefulWidget {
     this.initialCenter,
     this.initialZoom = 10.0,
     this.markers = const [],
+    this.polylines = const [],
     this.onMapTap,
     this.onMapLongPress,
     this.mapController,
@@ -56,6 +58,10 @@ class _OsmMapWidgetState extends State<OsmMapWidget> {
             debugPrint('Tile loading error: $error');
           },
         ),
+        if (widget.polylines.isNotEmpty)
+          PolylineLayer(
+            polylines: widget.polylines,
+          ),
         if (widget.markers.isNotEmpty)
           MarkerLayer(
             markers: widget.markers,

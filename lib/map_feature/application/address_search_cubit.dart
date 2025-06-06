@@ -98,16 +98,16 @@ class AddressSearchCubit extends Cubit<AddressSearchState> {
       failure: (error) {
         String errorMessage;
         switch (error) {
-          case ApiError.searchQueryTooShort:
+          case AddressError.searchQueryTooShort:
             errorMessage = 'Search query is too short';
             break;
-          case ApiError.noResultsFound:
+          case AddressError.noResultsFound:
             errorMessage = 'No addresses found';
             break;
-          case ApiError.networkError:
+          case AddressError.networkError:
             errorMessage = 'Network error. Please check your connection.';
             break;
-          case ApiError.rateLimitExceeded:
+          case AddressError.rateLimitExceeded:
             errorMessage = 'Too many requests. Please wait a moment.';
             break;
           default:

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Development Environment - OSM Address Finder</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .task {
+            background: #e3f2fd;
+            border-left: 4px solid #007bff;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .nav-links a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+        
+        .nav-links a:hover {
+            background: #e9ecef;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        .checklist {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .checklist ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .platform-tab {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .platform-tab.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚙️ How to Setup Development Environment</h1>
+        <p>Problem-solving guide for configuring your development setup</p>
+    </div>
+
+    <div class="content">
+        <h2>Quick Setup Checklist</h2>
+        <div class="checklist">
+            <p><strong>Use this checklist to verify your setup is complete:</strong></p>
+            <ul>
+                <li>☐ Flutter SDK 3.32.0+ installed and in PATH</li>
+                <li>☐ IDE with Flutter plugin configured</li>
+                <li>☐ Platform tools (Xcode/Android Studio) installed</li>
+                <li>☐ Project dependencies resolved</li>
+                <li>☐ Code generation working</li>
+                <li>☐ App builds and runs on target platform</li>
+            </ul>
+        </div>
+
+        <h2>Platform-Specific Setup</h2>
+        
+        <div class="platform-tabs">
+            <span class="platform-tab active" onclick="showPlatform('general')">General</span>
+            <span class="platform-tab" onclick="showPlatform('macos')">macOS</span>
+            <span class="platform-tab" onclick="showPlatform('windows')">Windows</span>
+            <span class="platform-tab" onclick="showPlatform('linux')">Linux</span>
+        </div>
+
+        <div id="general-content" class="platform-content">
+            <h3>Flutter SDK Setup</h3>
+            <div class="task">
+                <strong>Problem:</strong> Need to install Flutter SDK for cross-platform development
+            </div>
+
+            <h4>Step 1: Download Flutter</h4>
+            <div class="code-block">
+# Option 1: Download from official website
+# Visit https://flutter.dev/docs/get-started/install
+
+# Option 2: Clone from Git (for latest stable)
+git clone https://github.com/flutter/flutter.git -b stable
+            </div>
+
+            <h4>Step 2: Add to PATH</h4>
+            <div class="code-block">
+# Add Flutter to your PATH
+export PATH="$PATH:`pwd`/flutter/bin"
+
+# Verify installation
+flutter --version
+flutter doctor
+            </div>
+
+            <div class="success">
+                <strong>Expected Output:</strong> Flutter version 3.32.0 or higher with no critical issues in flutter doctor
+            </div>
+
+            <h3>IDE Configuration</h3>
+            <div class="task">
+                <strong>Problem:</strong> Need IDE with Flutter support for efficient development
+            </div>
+
+            <h4>VS Code Setup (Recommended)</h4>
+            <div class="code-block">
+# Install VS Code extensions
+code --install-extension dart-code.flutter
+code --install-extension dart-code.dart-code
+
+# Optional: Useful additional extensions
+code --install-extension ms-vscode.vscode-json
+code --install-extension bradlc.vscode-tailwindcss
+            </div>
+
+            <h4>Android Studio Setup</h4>
+            <ol>
+                <li>Download Android Studio from <a href="https://developer.android.com/studio">developer.android.com/studio</a></li>
+                <li>Install Flutter plugin: <code>File > Settings > Plugins > Flutter</code></li>
+                <li>Install Dart plugin (usually bundled with Flutter)</li>
+                <li>Restart Android Studio</li>
+            </ol>
+        </div>
+
+        <div id="macos-content" class="platform-content" style="display: none;">
+            <h3>macOS-Specific Setup</h3>
+            
+            <div class="task">
+                <strong>Problem:</strong> Setting up iOS development environment on macOS
+            </div>
+
+            <h4>Xcode Installation</h4>
+            <div class="code-block">
+# Install Xcode from App Store or Developer Portal
+# Verify installation
+xcode-select --install
+
+# Accept Xcode license
+sudo xcodebuild -license accept
+
+# Install CocoaPods for iOS dependencies
+sudo gem install cocoapods
+            </div>
+
+            <h4>iOS Simulator Setup</h4>
+            <div class="code-block">
+# List available simulators
+xcrun simctl list devices
+
+# Create new simulator if needed
+sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+            </div>
+
+            <div class="warning">
+                <strong>Note:</strong> iOS development requires Xcode 16.4+ for Flutter 3.32.0. Older Xcode versions may not be compatible.
+            </div>
+
+            <h4>Android Setup on macOS</h4>
+            <div class="code-block">
+# Install Android Studio
+brew install --cask android-studio
+
+# Or download manually from developer.android.com
+
+# Configure Android SDK
+flutter doctor --android-licenses
+            </div>
+        </div>
+
+        <div id="windows-content" class="platform-content" style="display: none;">
+            <h3>Windows-Specific Setup</h3>
+            
+            <div class="task">
+                <strong>Problem:</strong> Configuring Flutter development on Windows
+            </div>
+
+            <h4>PowerShell Setup</h4>
+            <div class="code-block">
+# Enable script execution
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# Add Flutter to PATH (System Environment Variables)
+# Add C:\flutter\bin to your PATH
+            </div>
+
+            <h4>Android Development</h4>
+            <div class="code-block">
+# Download Android Studio
+# Install from developer.android.com/studio
+
+# Accept Android licenses
+flutter doctor --android-licenses
+
+# Verify setup
+flutter doctor -v
+            </div>
+
+            <div class="warning">
+                <strong>Note:</strong> iOS development is not available on Windows. Use Android emulator or physical Android device for testing.
+            </div>
+        </div>
+
+        <div id="linux-content" class="platform-content" style="display: none;">
+            <h3>Linux-Specific Setup</h3>
+            
+            <div class="task">
+                <strong>Problem:</strong> Setting up Flutter development on Linux
+            </div>
+
+            <h4>Dependencies Installation</h4>
+            <div class="code-block">
+# Ubuntu/Debian
+sudo apt-get update
+sudo apt-get install curl git unzip xz-utils zip libglu1-mesa
+
+# Install Android Studio dependencies
+sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386
+            </div>
+
+            <h4>Android Studio Setup</h4>
+            <div class="code-block">
+# Download Android Studio
+wget https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2023.1.1.28/android-studio-2023.1.1.28-linux.tar.gz
+
+# Extract and install
+tar -xzf android-studio-*-linux.tar.gz
+cd android-studio/bin
+./studio.sh
+            </div>
+        </div>
+
+        <h2>Project-Specific Configuration</h2>
+        
+        <div class="task">
+            <strong>Problem:</strong> Configure project for OSM Address Finder development
+        </div>
+
+        <h3>Dependencies Resolution</h3>
+        <div class="code-block">
+# Navigate to project directory
+cd osm-address-finder
+
+# Clean previous builds
+flutter clean
+
+# Get dependencies
+flutter pub get
+
+# Generate required code
+dart run build_runner build --delete-conflicting-outputs
+        </div>
+
+        <h3>Platform Configuration</h3>
+        
+        <h4>iOS Configuration</h4>
+        <div class="code-block">
+# Install iOS dependencies
+cd ios
+pod install
+cd ..
+
+# Verify iOS setup
+flutter doctor
+        </div>
+
+        <h4>Android Configuration</h4>
+        <div class="code-block">
+# Check Android configuration
+flutter doctor --android-licenses
+
+# Build for Android
+flutter build apk --debug
+        </div>
+
+        <h2>Common Setup Issues</h2>
+
+        <div class="task">
+            <strong>Problem:</strong> Build runner fails with generation errors
+        </div>
+
+        <h4>Solution: Clean and regenerate</h4>
+        <div class="code-block">
+# Clear all generated files
+dart run build_runner clean
+
+# Clear Flutter cache
+flutter clean
+flutter pub get
+
+# Regenerate with conflict resolution
+dart run build_runner build --delete-conflicting-outputs
+        </div>
+
+        <div class="task">
+            <strong>Problem:</strong> Location permissions not working
+        </div>
+
+        <h4>Solution: Verify platform permissions</h4>
+        
+        <strong>iOS (ios/Runner/Info.plist):</strong>
+        <div class="code-block">
+&lt;key&gt;NSLocationWhenInUseUsageDescription&lt;/key&gt;
+&lt;string&gt;This app needs location access to show your position on the map.&lt;/string&gt;
+        </div>
+
+        <strong>Android (android/app/src/main/AndroidManifest.xml):</strong>
+        <div class="code-block">
+&lt;uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /&gt;
+&lt;uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /&gt;
+        </div>
+
+        <div class="task">
+            <strong>Problem:</strong> API connection issues with Nominatim
+        </div>
+
+        <h4>Solution: Check network configuration</h4>
+        <div class="code-block">
+# Test API connectivity
+curl "https://nominatim.openstreetmap.org/search?q=copenhagen&format=json&limit=1"
+
+# For Android emulator, ensure internet permission in AndroidManifest.xml
+&lt;uses-permission android:name="android.permission.INTERNET" /&gt;
+        </div>
+
+        <h2>Verification Steps</h2>
+        
+        <div class="success">
+            <strong>Final Verification:</strong> Run these commands to ensure everything is working:
+        </div>
+
+        <div class="code-block">
+# Check Flutter setup
+flutter doctor -v
+
+# Verify project builds
+flutter build apk --debug
+flutter build ios --debug  # macOS only
+
+# Run app
+flutter run --hot
+        </div>
+
+        <div class="checklist">
+            <h3>Success Criteria</h3>
+            <ul>
+                <li>✅ <code>flutter doctor</code> shows no critical errors</li>
+                <li>✅ App builds successfully for target platform</li>
+                <li>✅ App runs without crashes</li>
+                <li>✅ Map displays correctly</li>
+                <li>✅ Address search returns results</li>
+                <li>✅ Location services work (with permission)</li>
+            </ul>
+        </div>
+
+        <div class="nav-links">
+            <a href="index.html">← Back to Documentation</a>
+            <a href="how-to-debug-common-issues.html">Next: Debug Common Issues →</a>
+        </div>
+    </div>
+
+    <script>
+        function showPlatform(platform) {
+            // Hide all platform content
+            const contents = document.querySelectorAll('.platform-content');
+            contents.forEach(content => content.style.display = 'none');
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.platform-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected platform content
+            document.getElementById(platform + '-content').style.display = 'block';
+            
+            // Add active class to selected tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html> 

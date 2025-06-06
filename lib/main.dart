@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'core/utils/service_locator.dart';
-import 'map_feature/presentation/map_page.dart';
+import 'core/presentation/main_navigation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,12 +18,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'OSM Address Finder',
+      title: 'Map & News App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        primaryColor: const Color(0xFFE30613), // DR Red
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          primary: Colors.blue,
+        ).copyWith(
+          primary: const Color(0xFFE30613), // DR Red for news section
+        ),
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          elevation: 1,
+          iconTheme: IconThemeData(color: Colors.black),
+          titleTextStyle: TextStyle(
+            color: Colors.black, 
+            fontSize: 18, 
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         useMaterial3: true,
       ),
-      home: const MapPage(),
+      home: const MainNavigation(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

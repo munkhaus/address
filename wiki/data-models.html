@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Models - OSM Address Finder</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6f42c1 0%, #563d7c 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .model-section {
+            background: #f8f9fa;
+            border-left: 4px solid #6f42c1;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .domain-model {
+            background: #e8f5e8;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .dto-model {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .state-model {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .error-model {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .relationship-diagram {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .nav-links a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+        
+        .nav-links a:hover {
+            background: #e9ecef;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9em;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .toc {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            border-left: 4px solid #6f42c1;
+        }
+        
+        .toc ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .layer-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+        
+        .domain { background: #d4edda; color: #155724; }
+        .infrastructure { background: #cce5ff; color: #004085; }
+        .application { background: #fff3cd; color: #856404; }
+        .core { background: #e2e3e5; color: #383d41; }
+        
+        .flow-arrow {
+            display: inline-block;
+            margin: 0 1rem;
+            font-size: 1.2em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Data Models</h1>
+        <p>Complete reference for all data structures in the OSM Address Finder app</p>
+    </div>
+
+    <div class="content">
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#overview">Data Model Overview</a></li>
+                <li><a href="#domain">Domain Models</a></li>
+                <li><a href="#infrastructure">Infrastructure Models (DTOs)</a></li>
+                <li><a href="#application">Application State Models</a></li>
+                <li><a href="#core">Core Utility Models</a></li>
+                <li><a href="#errors">Error Models</a></li>
+                <li><a href="#relationships">Model Relationships</a></li>
+                <li><a href="#examples">Usage Examples</a></li>
+            </ul>
+        </div>
+
+        <h2 id="overview">Data Model Overview</h2>
+        
+        <p>The OSM Address Finder app follows Clean Architecture principles with distinct data models for each layer:</p>
+        
+        <div class="relationship-diagram">
+            <h3>Data Flow Architecture</h3>
+            <div style="font-family: monospace; font-size: 0.9em; line-height: 2;">
+                <strong>API Response</strong> 
+                <span class="flow-arrow">→</span> 
+                <strong>DTO</strong> 
+                <span class="flow-arrow">→</span> 
+                <strong>Domain Model</strong> 
+                <span class="flow-arrow">→</span> 
+                <strong>State Model</strong> 
+                <span class="flow-arrow">→</span> 
+                <strong>UI</strong>
+                <br><br>
+                <span style="color: #6c757d;">
+                Raw JSON → AddressSuggestionDto → AddressSuggestion → DataState&lt;List&lt;AddressSuggestion&gt;&gt; → Widget
+                </span>
+            </div>
+        </div>
+
+        <h2 id="domain">Domain Models</h2>
+        <p>Pure business logic models with no external dependencies.</p>
+
+        <div class="domain-model">
+            <h3>AddressSuggestion <span class="layer-badge domain">Domain</span></h3>
+            <p><strong>Purpose:</strong> Represents a searchable address or location</p>
+            <p><strong>Location:</strong> <code>lib/map_feature/domain/address_suggestion_model.dart</code></p>
+        </div>
+
+        <div class="code-block">
+@freezed
+class AddressSuggestion with _$AddressSuggestion {
+  const AddressSuggestion._();
+
+  const factory AddressSuggestion({
+    @Default('') String displayName,
+    @Default(0.0) double latitude,
+    @Default(0.0) double longitude,
+    @Default('') String addressType,
+    @Default('') String category,
+    @Default('') String osmId,
+    @Default('') String osmType,
+    @Default(0.0) double importance,
+  }) = _AddressSuggestion;
+
+  // Computed properties
+  String get shortDisplayName {
+    final parts = displayName.split(',');
+    return parts.length > 2 ? '${parts[0]}, ${parts[1]}' : displayName;
+  }
+
+  LatLng get coordinates => LatLng(latitude, longitude);
+
+  bool get isValid => displayName.isNotEmpty && 
+                     latitude != 0.0 && 
+                     longitude != 0.0;
+}
+        </div>
+
+        <h4>Field Specifications</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Type</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>displayName</td>
+                    <td>String</td>
+                    <td>''</td>
+                    <td>Complete formatted address</td>
+                    <td>"Copenhagen, Capital Region of Denmark, Denmark"</td>
+                </tr>
+                <tr>
+                    <td>latitude</td>
+                    <td>double</td>
+                    <td>0.0</td>
+                    <td>WGS84 latitude coordinate</td>
+                    <td>55.6867243</td>
+                </tr>
+                <tr>
+                    <td>longitude</td>
+                    <td>double</td>
+                    <td>0.0</td>
+                    <td>WGS84 longitude coordinate</td>
+                    <td>12.5700724</td>
+                </tr>
+                <tr>
+                    <td>addressType</td>
+                    <td>String</td>
+                    <td>''</td>
+                    <td>OpenStreetMap place type</td>
+                    <td>"city", "street", "house", "postcode"</td>
+                </tr>
+                <tr>
+                    <td>category</td>
+                    <td>String</td>
+                    <td>''</td>
+                    <td>OpenStreetMap category</td>
+                    <td>"place", "highway", "building", "amenity"</td>
+                </tr>
+                <tr>
+                    <td>osmId</td>
+                    <td>String</td>
+                    <td>''</td>
+                    <td>OpenStreetMap unique identifier</td>
+                    <td>"2192363"</td>
+                </tr>
+                <tr>
+                    <td>osmType</td>
+                    <td>String</td>
+                    <td>''</td>
+                    <td>OSM geometry type</td>
+                    <td>"relation", "way", "node"</td>
+                </tr>
+                <tr>
+                    <td>importance</td>
+                    <td>double</td>
+                    <td>0.0</td>
+                    <td>Search relevance score (0.0-1.0)</td>
+                    <td>0.8506717840740555</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>Computed Properties</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>shortDisplayName</td>
+                    <td>String</td>
+                    <td>Abbreviated display name (first 2 parts)</td>
+                    <td>"Copenhagen, Capital Region"</td>
+                </tr>
+                <tr>
+                    <td>coordinates</td>
+                    <td>LatLng</td>
+                    <td>Map coordinates object</td>
+                    <td>LatLng(55.6867243, 12.5700724)</td>
+                </tr>
+                <tr>
+                    <td>isValid</td>
+                    <td>bool</td>
+                    <td>Validation check for required fields</td>
+                    <td>true/false</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="infrastructure">Infrastructure Models (DTOs)</h2>
+        <p>Data Transfer Objects for external API communication.</p>
+
+        <div class="dto-model">
+            <h3>AddressSuggestionDto <span class="layer-badge infrastructure">Infrastructure</span></h3>
+            <p><strong>Purpose:</strong> Maps Nominatim API responses to domain models</p>
+            <p><strong>Location:</strong> <code>lib/map_feature/infrastructure/dtos/address_suggestion_dto.dart</code></p>
+        </div>
+
+        <div class="code-block">
+@freezed
+class AddressSuggestionDto with _$AddressSuggestionDto {
+  const factory AddressSuggestionDto({
+    @Default('') @JsonKey(name: 'display_name') String displayName,
+    @Default('') String lat,
+    @Default('') String lon,
+    @Default('') String type,
+    @Default('') String category,
+    @Default('') @JsonKey(name: 'osm_id') String osmId,
+    @Default('') @JsonKey(name: 'osm_type') String osmType,
+    @Default('') String importance,
+    @Default('') @JsonKey(name: 'place_id') String placeId,
+    @Default('') String licence,
+  }) = _AddressSuggestionDto;
+
+  factory AddressSuggestionDto.fromJson(Map&lt;String, dynamic&gt; json) =&gt; 
+      _$AddressSuggestionDtoFromJson(json);
+}
+
+extension AddressSuggestionDtoX on AddressSuggestionDto {
+  AddressSuggestion toDomain() =&gt; AddressSuggestion(
+    displayName: displayName,
+    latitude: double.tryParse(lat) ?? 0.0,
+    longitude: double.tryParse(lon) ?? 0.0,
+    addressType: type,
+    category: category,
+    osmId: osmId,
+    osmType: osmType,
+    importance: double.tryParse(importance) ?? 0.0,
+  );
+}
+        </div>
+
+        <h4>DTO to Domain Mapping</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>API Field</th>
+                    <th>DTO Field</th>
+                    <th>Domain Field</th>
+                    <th>Transformation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>display_name</td>
+                    <td>displayName</td>
+                    <td>displayName</td>
+                    <td>Direct mapping</td>
+                </tr>
+                <tr>
+                    <td>lat</td>
+                    <td>lat (String)</td>
+                    <td>latitude (double)</td>
+                    <td>double.tryParse() with 0.0 fallback</td>
+                </tr>
+                <tr>
+                    <td>lon</td>
+                    <td>lon (String)</td>
+                    <td>longitude (double)</td>
+                    <td>double.tryParse() with 0.0 fallback</td>
+                </tr>
+                <tr>
+                    <td>osm_id</td>
+                    <td>osmId</td>
+                    <td>osmId</td>
+                    <td>Direct mapping</td>
+                </tr>
+                <tr>
+                    <td>osm_type</td>
+                    <td>osmType</td>
+                    <td>osmType</td>
+                    <td>Direct mapping</td>
+                </tr>
+                <tr>
+                    <td>importance</td>
+                    <td>importance (String)</td>
+                    <td>importance (double)</td>
+                    <td>double.tryParse() with 0.0 fallback</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="application">Application State Models</h2>
+        <p>State management models for BLoC/Cubit pattern.</p>
+
+        <div class="state-model">
+            <h3>AddressSearchState <span class="layer-badge application">Application</span></h3>
+            <p><strong>Purpose:</strong> Manages address search UI state and data</p>
+            <p><strong>Location:</strong> <code>lib/map_feature/application/address_search_state.dart</code></p>
+        </div>
+
+        <div class="code-block">
+@freezed
+class AddressSearchState with _$AddressSearchState {
+  const AddressSearchState._();
+
+  const factory AddressSearchState({
+    required DataState&lt;List&lt;AddressSuggestion&gt;&gt; searchState,
+    @Default('') String currentQuery,
+    @Default(false) bool showSuggestions,
+    AddressSuggestion? selectedSuggestion,
+  }) = _AddressSearchState;
+
+  // Helper getters for UI state
+  bool get isLoading =&gt; searchState.isLoading;
+  bool get hasError =&gt; searchState.hasError;
+  bool get isSuccess =&gt; searchState.isSuccess;
+  bool get isIdle =&gt; searchState.isIdle;
+  
+  bool get hasResults =&gt; isSuccess && searchState.data?.isNotEmpty == true;
+  bool get hasNoResults =&gt; isSuccess && searchState.data?.isEmpty == true;
+  
+  List&lt;AddressSuggestion&gt; get suggestions =&gt; searchState.data ?? [];
+  String? get errorMessage =&gt; searchState.errorMessage;
+
+  factory AddressSearchState.initial() =&gt; const AddressSearchState(
+    searchState: DataState.idle(),
+  );
+}
+        </div>
+
+        <div class="state-model">
+            <h3>MapState <span class="layer-badge application">Application</span></h3>
+            <p><strong>Purpose:</strong> Manages map display state and current location</p>
+            <p><strong>Location:</strong> <code>lib/map_feature/application/map_state.dart</code></p>
+        </div>
+
+        <div class="code-block">
+@freezed
+class MapState with _$MapState {
+  const MapState._();
+
+  const factory MapState({
+    required DataState&lt;LatLng&gt; locationState,
+    @Default([]) List&lt;Marker&gt; markers,
+    LatLng? currentCenter,
+    @Default(10.0) double currentZoom,
+  }) = _MapState;
+
+  // Helper getters
+  bool get isLoadingLocation =&gt; locationState.isLoading;
+  bool get hasLocationError =&gt; locationState.hasError;
+  bool get hasCurrentLocation =&gt; locationState.isSuccess;
+  
+  LatLng? get currentLocation =&gt; locationState.data;
+  String? get locationErrorMessage =&gt; locationState.errorMessage;
+  bool get hasMarkers =&gt; markers.isNotEmpty;
+
+  factory MapState.initial() =&gt; const MapState(
+    locationState: DataState.idle(),
+    currentCenter: LatLng(56.2639, 9.5018), // Denmark fallback
+  );
+}
+        </div>
+
+        <h2 id="core">Core Utility Models</h2>
+        <p>Shared utility models used across the application.</p>
+
+        <div class="model-section">
+            <h3>DataState&lt;T&gt; <span class="layer-badge core">Core</span></h3>
+            <p><strong>Purpose:</strong> Generic wrapper for async operation states</p>
+            <p><strong>Location:</strong> <code>lib/core/utils/data_state.dart</code></p>
+        </div>
+
+        <div class="code-block">
+@freezed
+class DataState&lt;T&gt; with _$DataState&lt;T&gt; {
+  const factory DataState.idle() = _Idle&lt;T&gt;;
+  const factory DataState.loading() = _Loading&lt;T&gt;;
+  const factory DataState.success(T data) = _Success&lt;T&gt;;
+  const factory DataState.error([String? message]) = _Error&lt;T&gt;;
+}
+
+extension DataStateX&lt;T&gt; on DataState&lt;T&gt; {
+  bool get isIdle =&gt; this is _Idle&lt;T&gt;;
+  bool get isLoading =&gt; this is _Loading&lt;T&gt;;
+  bool get isSuccess =&gt; this is _Success&lt;T&gt;;
+  bool get hasError =&gt; this is _Error&lt;T&gt;;
+  
+  T? get data =&gt; maybeWhen(
+    success: (data) =&gt; data,
+    orElse: () =&gt; null,
+  );
+  
+  String? get errorMessage =&gt; maybeWhen(
+    error: (message) =&gt; message,
+    orElse: () =&gt; null,
+  );
+}
+        </div>
+
+        <div class="model-section">
+            <h3>Result&lt;T, E&gt; <span class="layer-badge core">Core</span></h3>
+            <p><strong>Purpose:</strong> Type-safe error handling for operations</p>
+            <p><strong>Location:</strong> <code>lib/core/utils/result.dart</code></p>
+        </div>
+
+        <div class="code-block">
+@freezed
+class Result&lt;T, E&gt; with _$Result&lt;T, E&gt; {
+  const factory Result.success(T data) = _Success&lt;T, E&gt;;
+  const factory Result.failure(E error) = _Failure&lt;T, E&gt;;
+}
+
+extension ResultX&lt;T, E&gt; on Result&lt;T, E&gt; {
+  bool get isSuccess =&gt; this is _Success&lt;T, E&gt;;
+  bool get isFailure =&gt; this is _Failure&lt;T, E&gt;;
+  
+  T? get data =&gt; maybeWhen(
+    success: (data) =&gt; data,
+    orElse: () =&gt; null,
+  );
+  
+  E? get error =&gt; maybeWhen(
+    failure: (error) =&gt; error,
+    orElse: () =&gt; null,
+  );
+}
+        </div>
+
+        <h2 id="errors">Error Models</h2>
+        <p>Type-safe error definitions for different failure scenarios.</p>
+
+        <div class="error-model">
+            <h3>AddressError <span class="layer-badge domain">Domain</span></h3>
+            <p><strong>Purpose:</strong> Domain-specific errors for address operations</p>
+            <p><strong>Location:</strong> <code>lib/map_feature/domain/map_errors.dart</code></p>
+        </div>
+
+        <div class="code-block">
+enum AddressError {
+  networkError,           // Network connectivity issues
+  serverError,           // API server errors (500, 502, etc.)
+  searchQueryTooShort,   // Query validation failed
+  noResultsFound,        // No matching addresses
+  rateLimitExceeded,     // API rate limiting (429)
+  unknown,               // Unexpected errors
+}
+        </div>
+
+        <div class="error-model">
+            <h3>LocationError <span class="layer-badge domain">Domain</span></h3>
+            <p><strong>Purpose:</strong> GPS and location service errors</p>
+            <p><strong>Location:</strong> <code>lib/map_feature/domain/map_errors.dart</code></p>
+        </div>
+
+        <div class="code-block">
+enum LocationError {
+  permissionDenied,      // User denied location permission
+  serviceDisabled,       // Location services disabled
+  timeout,               // Location request timeout
+  unknown,               // Other location errors
+}
+        </div>
+
+        <h2 id="relationships">Model Relationships</h2>
+
+        <div class="relationship-diagram">
+            <h3>Complete Data Flow</h3>
+            <svg width="800" height="400" viewBox="0 0 800 400" style="max-width: 100%; height: auto;">
+                <!-- Background layers -->
+                <rect x="50" y="50" width="700" height="80" fill="#fff3e0" stroke="#ff9800" rx="5"/>
+                <text x="75" y="75" font-size="14" font-weight="bold">Presentation Layer</text>
+                
+                <rect x="50" y="150" width="700" height="80" fill="#fff3cd" stroke="#856404" rx="5"/>
+                <text x="75" y="175" font-size="14" font-weight="bold">Application Layer</text>
+                
+                <rect x="50" y="250" width="700" height="80" fill="#e8f5e8" stroke="#28a745" rx="5"/>
+                <text x="75" y="275" font-size="14" font-weight="bold">Domain Layer</text>
+                
+                <rect x="50" y="350" width="700" height="30" fill="#cce5ff" stroke="#004085" rx="5"/>
+                <text x="75" y="370" font-size="14" font-weight="bold">Infrastructure Layer</text>
+                
+                <!-- Model boxes -->
+                <rect x="200" y="70" width="140" height="40" fill="white" stroke="#ff9800" rx="3"/>
+                <text x="270" y="95" text-anchor="middle" font-size="12">AddressSearchWidget</text>
+                
+                <rect x="450" y="70" width="120" height="40" fill="white" stroke="#ff9800" rx="3"/>
+                <text x="510" y="95" text-anchor="middle" font-size="12">MapPage</text>
+                
+                <rect x="200" y="170" width="140" height="40" fill="white" stroke="#856404" rx="3"/>
+                <text x="270" y="195" text-anchor="middle" font-size="12">AddressSearchState</text>
+                
+                <rect x="450" y="170" width="120" height="40" fill="white" stroke="#856404" rx="3"/>
+                <text x="510" y="195" text-anchor="middle" font-size="12">MapState</text>
+                
+                <rect x="200" y="270" width="140" height="40" fill="white" stroke="#28a745" rx="3"/>
+                <text x="270" y="295" text-anchor="middle" font-size="12">AddressSuggestion</text>
+                
+                <rect x="450" y="270" width="120" height="40" fill="white" stroke="#28a745" rx="3"/>
+                <text x="510" y="295" text-anchor="middle" font-size="12">Result&lt;T,E&gt;</text>
+                
+                <rect x="600" y="270" width="100" height="40" fill="white" stroke="#28a745" rx="3"/>
+                <text x="650" y="295" text-anchor="middle" font-size="12">AddressError</text>
+                
+                <rect x="200" y="355" width="140" height="20" fill="white" stroke="#004085" rx="3"/>
+                <text x="270" y="368" text-anchor="middle" font-size="10">AddressSuggestionDto</text>
+                
+                <!-- Arrows -->
+                <path d="M 270 110 L 270 170" stroke="#666" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                <path d="M 270 210 L 270 270" stroke="#666" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                <path d="M 270 310 L 270 355" stroke="#666" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                
+                <path d="M 510 110 L 510 170" stroke="#666" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                <path d="M 510 210 L 510 270" stroke="#666" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                
+                <!-- Arrow marker -->
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+                    </marker>
+                </defs>
+                
+                <!-- Labels -->
+                <text x="400" y="20" text-anchor="middle" font-size="16" font-weight="bold">Data Model Relationships</text>
+            </svg>
+        </div>
+
+        <h3>State Management Flow</h3>
+        <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px; font-family: monospace; font-size: 0.9em;">
+            <strong>1. User Input:</strong> Widget → Cubit.searchAddresses(query)<br>
+            <strong>2. State Update:</strong> Cubit → AddressSearchState.copyWith(searchState: DataState.loading())<br>
+            <strong>3. Service Call:</strong> Cubit → IAddressService.searchAddresses()<br>
+            <strong>4. API Response:</strong> NominatimService → Result&lt;List&lt;AddressSuggestion&gt;, AddressError&gt;<br>
+            <strong>5. State Update:</strong> Cubit → AddressSearchState.copyWith(searchState: DataState.success(suggestions))<br>
+            <strong>6. UI Rebuild:</strong> BlocBuilder → Widget displays suggestions
+        </div>
+
+        <h2 id="examples">Usage Examples</h2>
+
+        <h3>Creating an Address Suggestion</h3>
+        <div class="code-block">
+// From API response
+final dto = AddressSuggestionDto.fromJson({
+  'display_name': 'Copenhagen, Capital Region of Denmark, Denmark',
+  'lat': '55.6867243',
+  'lon': '12.5700724',
+  'type': 'city',
+  'category': 'place',
+  'osm_id': '2192363',
+  'osm_type': 'relation',
+  'importance': '0.8506717840740555',
+});
+
+final suggestion = dto.toDomain();
+
+// Manual creation
+final suggestion = AddressSuggestion(
+  displayName: 'Copenhagen, Capital Region of Denmark, Denmark',
+  latitude: 55.6867243,
+  longitude: 12.5700724,
+  addressType: 'city',
+  category: 'place',
+  importance: 0.85,
+);
+        </div>
+
+        <h3>Managing Search State</h3>
+        <div class="code-block">
+// Initial state
+var state = AddressSearchState.initial();
+
+// Loading state
+state = state.copyWith(
+  searchState: const DataState.loading(),
+  currentQuery: 'Copenhagen',
+  showSuggestions: true,
+);
+
+// Success state
+state = state.copyWith(
+  searchState: DataState.success(suggestions),
+);
+
+// Error state
+state = state.copyWith(
+  searchState: const DataState.error('Network error'),
+);
+
+// Using state in UI
+if (state.isLoading) {
+  return const CircularProgressIndicator();
+} else if (state.hasError) {
+  return Text('Error: ${state.errorMessage}');
+} else if (state.hasResults) {
+  return ListView.builder(
+    itemCount: state.suggestions.length,
+    itemBuilder: (context, index) {
+      final suggestion = state.suggestions[index];
+      return ListTile(
+        title: Text(suggestion.shortDisplayName),
+        subtitle: Text(suggestion.displayName),
+      );
+    },
+  );
+}
+        </div>
+
+        <h3>Error Handling Pattern</h3>
+        <div class="code-block">
+final result = await addressService.searchAddresses(query);
+
+result.when(
+  success: (suggestions) {
+    emit(state.copyWith(
+      searchState: DataState.success(suggestions),
+    ));
+  },
+  failure: (error) {
+    final message = switch (error) {
+      AddressError.noResultsFound => 'No addresses found',
+      AddressError.networkError => 'Check your internet connection',
+      AddressError.rateLimitExceeded => 'Too many requests, please wait',
+      AddressError.searchQueryTooShort => 'Enter at least 3 characters',
+      _ => 'Search failed, please try again',
+    };
+    
+    emit(state.copyWith(
+      searchState: DataState.error(message),
+    ));
+  },
+);
+        </div>
+
+        <div class="nav-links">
+            <a href="index.html">← Back to Documentation</a>
+            <a href="codebase-structure.html">Next: Codebase Structure →</a>
+        </div>
+    </div>
+</body>
+</html> 

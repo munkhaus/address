@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Reference - OSM Address Finder</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6f42c1 0%, #563d7c 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .architecture-diagram {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+        
+        .file-tree {
+            background: #f1f3f4;
+            padding: 1rem;
+            border-radius: 5px;
+            font-family: monospace;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .layer {
+            background: #f8f9fa;
+            border-left: 4px solid #6f42c1;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .pattern {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .nav-links a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+        
+        .nav-links a:hover {
+            background: #e9ecef;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .toc {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            border-left: 4px solid #6f42c1;
+        }
+        
+        .toc ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏛️ Architecture Reference</h1>
+        <p>Technical specifications and architectural documentation</p>
+    </div>
+
+    <div class="content">
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#overview">Architectural Overview</a></li>
+                <li><a href="#layers">Layer Specifications</a></li>
+                <li><a href="#patterns">Design Patterns</a></li>
+                <li><a href="#structure">Directory Structure</a></li>
+                <li><a href="#dependencies">Dependency Flow</a></li>
+                <li><a href="#state-management">State Management</a></li>
+                <li><a href="#error-handling">Error Handling</a></li>
+                <li><a href="#data-flow">Data Flow</a></li>
+            </ul>
+        </div>
+
+        <h2 id="overview">Architectural Overview</h2>
+        
+        <div class="architecture-diagram">
+            <h3>Clean Architecture Implementation</h3>
+            <svg width="600" height="300" viewBox="0 0 600 300" style="max-width: 100%; height: auto;">
+                <circle cx="300" cy="150" r="120" fill="#ffeaa7" stroke="#fdcb6e" stroke-width="2"/>
+                <circle cx="300" cy="150" r="90" fill="#74b9ff" stroke="#0984e3" stroke-width="2"/>
+                <circle cx="300" cy="150" r="60" fill="#a29bfe" stroke="#6c5ce7" stroke-width="2"/>
+                <circle cx="300" cy="150" r="30" fill="#fd79a8" stroke="#e84393" stroke-width="2"/>
+                
+                <text x="300" y="125" text-anchor="middle" font-size="12" font-weight="bold">Domain</text>
+                <text x="300" y="105" text-anchor="middle" font-size="10">Application</text>
+                <text x="300" y="85" text-anchor="middle" font-size="10">Infrastructure</text>
+                <text x="300" y="65" text-anchor="middle" font-size="10">Presentation</text>
+                
+                <!-- External dependencies -->
+                <rect x="50" y="50" width="80" height="40" fill="#e17055" stroke="#d63031" rx="5"/>
+                <text x="90" y="75" text-anchor="middle" font-size="10" fill="white">UI Widgets</text>
+                
+                <rect x="470" y="50" width="80" height="40" fill="#e17055" stroke="#d63031" rx="5"/>
+                <text x="510" y="75" text-anchor="middle" font-size="10" fill="white">APIs</text>
+                
+                <rect x="470" y="210" width="80" height="40" fill="#e17055" stroke="#d63031" rx="5"/>
+                <text x="510" y="235" text-anchor="middle" font-size="10" fill="white">GPS/Location</text>
+                
+                <!-- Arrows -->
+                <path d="M 130 70 Q 200 70 240 120" stroke="#2d3436" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                <path d="M 470 70 Q 400 70 360 120" stroke="#2d3436" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                <path d="M 470 230 Q 400 230 360 180" stroke="#2d3436" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#2d3436"/>
+                    </marker>
+                </defs>
+            </svg>
+        </div>
+
+        <h2 id="layers">Layer Specifications</h2>
+
+        <div class="layer">
+            <h3>🎯 Domain Layer (Core Business Logic)</h3>
+            <p><strong>Purpose:</strong> Contains pure business logic, entities, and interfaces</p>
+            <p><strong>Dependencies:</strong> None (pure Dart)</p>
+            <p><strong>Location:</strong> <code>lib/map_feature/domain/</code></p>
+            <h4>Components:</h4>
+            <ul>
+                <li><strong>Models:</strong> <code>AddressSuggestion</code> - immutable business entities</li>
+                <li><strong>Interfaces:</strong> <code>IAddressService</code>, <code>ILocationService</code> - contracts</li>
+                <li><strong>Errors:</strong> <code>AddressError</code>, <code>LocationError</code> - domain errors</li>
+            </ul>
+        </div>
+
+        <div class="layer">
+            <h3>📊 Application Layer (State Management)</h3>
+            <p><strong>Purpose:</strong> Orchestrates business logic and manages application state</p>
+            <p><strong>Dependencies:</strong> Domain layer only</p>
+            <p><strong>Location:</strong> <code>lib/map_feature/application/</code></p>
+            <h4>Components:</h4>
+            <ul>
+                <li><strong>Cubits:</strong> <code>AddressSearchCubit</code>, <code>MapCubit</code> - state management</li>
+                <li><strong>States:</strong> <code>AddressSearchState</code>, <code>MapState</code> - immutable state</li>
+                <li><strong>Events:</strong> User actions and system events</li>
+            </ul>
+        </div>
+
+        <div class="layer">
+            <h3>🔧 Infrastructure Layer (External Services)</h3>
+            <p><strong>Purpose:</strong> Implements domain interfaces with external dependencies</p>
+            <p><strong>Dependencies:</strong> Domain layer, external packages</p>
+            <p><strong>Location:</strong> <code>lib/map_feature/infrastructure/</code></p>
+            <h4>Components:</h4>
+            <ul>
+                <li><strong>Services:</strong> <code>NominatimService</code>, <code>LocationService</code> - implementations</li>
+                <li><strong>DTOs:</strong> <code>AddressSuggestionDto</code> - data transfer objects</li>
+                <li><strong>Constants:</strong> <code>NominatimApiKeys</code> - configuration</li>
+            </ul>
+        </div>
+
+        <div class="layer">
+            <h3>🎨 Presentation Layer (User Interface)</h3>
+            <p><strong>Purpose:</strong> Handles user interface and user interactions</p>
+            <p><strong>Dependencies:</strong> Application layer only</p>
+            <p><strong>Location:</strong> <code>lib/map_feature/presentation/</code></p>
+            <h4>Components:</h4>
+            <ul>
+                <li><strong>Pages:</strong> <code>MapPage</code> - screen-level widgets</li>
+                <li><strong>Widgets:</strong> <code>AddressSearchWidget</code>, <code>OsmMapWidget</code> - UI components</li>
+                <li><strong>Providers:</strong> BlocProvider setup for dependency injection</li>
+            </ul>
+        </div>
+
+        <h2 id="patterns">Design Patterns</h2>
+
+        <div class="pattern">
+            <h3>🔄 Repository Pattern</h3>
+            <p><strong>Implementation:</strong> Interface-based service contracts</p>
+            <div class="code-block">
+// Domain interface
+abstract class IAddressService {
+  Future&lt;Result&lt;List&lt;AddressSuggestion&gt;, AddressError&gt;&gt; searchAddresses(String query);
+}
+
+// Infrastructure implementation
+class NominatimService implements IAddressService {
+  @override
+  Future&lt;Result&lt;List&lt;AddressSuggestion&gt;, AddressError&gt;&gt; searchAddresses(String query) {
+    // Implementation details...
+  }
+}
+            </div>
+        </div>
+
+        <div class="pattern">
+            <h3>📦 DTO Pattern</h3>
+            <p><strong>Implementation:</strong> Separate data transfer objects for API responses</p>
+            <div class="code-block">
+@freezed
+class AddressSuggestionDto with _$AddressSuggestionDto {
+  const factory AddressSuggestionDto({
+    @Default('') String displayName,
+    @Default('') String lat,
+    @Default('') String lon,
+    // ... other API fields
+  }) = _AddressSuggestionDto;
+
+  factory AddressSuggestionDto.fromJson(Map&lt;String, dynamic&gt; json) =&gt; 
+      _$AddressSuggestionDtoFromJson(json);
+}
+
+extension AddressSuggestionDtoX on AddressSuggestionDto {
+  AddressSuggestion toDomain() =&gt; AddressSuggestion(
+    displayName: displayName,
+    latitude: double.tryParse(lat) ?? 0.0,
+    longitude: double.tryParse(lon) ?? 0.0,
+  );
+}
+            </div>
+        </div>
+
+        <div class="pattern">
+            <h3>✅ Result Pattern</h3>
+            <p><strong>Implementation:</strong> Custom Result&lt;T,E&gt; for error handling</p>
+            <div class="code-block">
+@freezed
+class Result&lt;T, E&gt; with _$Result&lt;T, E&gt; {
+  const factory Result.success(T data) = _Success&lt;T, E&gt;;
+  const factory Result.failure(E error) = _Failure&lt;T, E&gt;;
+}
+
+// Usage
+final result = await addressService.searchAddresses(query);
+result.when(
+  success: (addresses) =&gt; emit(state.copyWith(addresses: addresses)),
+  failure: (error) =&gt; emit(state.copyWith(error: error)),
+);
+            </div>
+        </div>
+
+        <div class="pattern">
+            <h3>🎭 State Pattern</h3>
+            <p><strong>Implementation:</strong> Immutable state objects with Freezed</p>
+            <div class="code-block">
+@freezed
+class AddressSearchState with _$AddressSearchState {
+  const AddressSearchState._();
+
+  const factory AddressSearchState({
+    required DataState&lt;List&lt;AddressSuggestion&gt;&gt; searchState,
+    @Default('') String currentQuery,
+    @Default(false) bool showSuggestions,
+  }) = _AddressSearchState;
+
+  // Helper getters
+  bool get isLoading =&gt; searchState.isLoading;
+  bool get hasError =&gt; searchState.hasError;
+  bool get isSuccess =&gt; searchState.isSuccess;
+}
+            </div>
+        </div>
+
+        <h2 id="structure">Directory Structure</h2>
+        
+        <div class="file-tree">
+lib/
+├── core/                           # Shared utilities
+│   ├── constants/
+│   │   └── k_sizes.dart           # UI measurement constants
+│   └── utils/
+│       ├── data_state.dart        # Generic async state wrapper
+│       ├── result.dart            # Custom Result&lt;T,E&gt; type
+│       └── service_locator.dart   # Dependency injection setup
+├── map_feature/                   # Main feature module
+│   ├── application/               # State Management Layer
+│   │   ├── address_search_cubit.dart    # Address search business logic
+│   │   ├── address_search_state.dart    # Address search state definitions  
+│   │   ├── map_cubit.dart               # Map business logic
+│   │   └── map_state.dart               # Map state definitions
+│   ├── domain/                    # Business Logic Layer
+│   │   ├── address_suggestion_model.dart # Address data model
+│   │   ├── i_address_service.dart       # Address service interface
+│   │   ├── i_location_service.dart      # Location service interface
+│   │   └── map_errors.dart              # Error type definitions
+│   ├── infrastructure/            # Data Access Layer
+│   │   ├── constants/
+│   │   │   └── nominatim_api_keys.dart  # API configuration
+│   │   ├── dtos/
+│   │   │   └── address_suggestion_dto.dart # API response mapping
+│   │   ├── location_service.dart        # GPS location implementation
+│   │   └── nominatim_service.dart       # Nominatim API implementation
+│   └── presentation/              # UI Layer
+│       ├── map_page.dart          # Main map screen
+│       └── widgets/
+│           ├── address_search_widget.dart # Search input & suggestions
+│           └── osm_map_widget.dart      # Map display component
+└── main.dart                      # App entry point
+        </div>
+
+        <h2 id="dependencies">Dependency Flow</h2>
+        
+        <p><strong>Dependency Rule:</strong> Dependencies point inward - outer layers depend on inner layers, never the reverse.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Layer</th>
+                    <th>Can Depend On</th>
+                    <th>Cannot Depend On</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Domain</td>
+                    <td>Nothing (pure Dart)</td>
+                    <td>All other layers</td>
+                </tr>
+                <tr>
+                    <td>Application</td>
+                    <td>Domain</td>
+                    <td>Infrastructure, Presentation</td>
+                </tr>
+                <tr>
+                    <td>Infrastructure</td>
+                    <td>Domain, External packages</td>
+                    <td>Application, Presentation</td>
+                </tr>
+                <tr>
+                    <td>Presentation</td>
+                    <td>Application, Domain</td>
+                    <td>Infrastructure</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="state-management">State Management</h2>
+        
+        <h3>BLoC/Cubit Pattern</h3>
+        <div class="code-block">
+// Cubit manages business logic
+class AddressSearchCubit extends Cubit&lt;AddressSearchState&gt; {
+  final IAddressService _addressService;
+  
+  AddressSearchCubit({IAddressService? addressService})
+      : _addressService = addressService ?? getdep&lt;IAddressService&gt;(),
+        super(AddressSearchState.initial());
+
+  Future&lt;void&gt; searchAddresses(String query) async {
+    emit(state.copyWith(searchState: const DataState.loading()));
+    
+    final result = await _addressService.searchAddresses(query);
+    result.when(
+      success: (addresses) =&gt; emit(state.copyWith(
+        searchState: DataState.success(addresses),
+      )),
+      failure: (error) =&gt; emit(state.copyWith(
+        searchState: const DataState.error(),
+      )),
+    );
+  }
+}
+        </div>
+
+        <h3>State Structure</h3>
+        <div class="code-block">
+// Generic async state wrapper
+@freezed
+class DataState&lt;T&gt; with _$DataState&lt;T&gt; {
+  const factory DataState.idle() = _Idle&lt;T&gt;;
+  const factory DataState.loading() = _Loading&lt;T&gt;;
+  const factory DataState.success(T data) = _Success&lt;T&gt;;
+  const factory DataState.error([String? message]) = _Error&lt;T&gt;;
+}
+        </div>
+
+        <h2 id="error-handling">Error Handling</h2>
+        
+        <h3>Domain Errors</h3>
+        <div class="code-block">
+enum AddressError {
+  networkError,
+  timeout,
+  noResults,
+  invalidQuery,
+  rateLimited,
+  unknown;
+}
+
+enum LocationError {
+  permissionDenied,
+  serviceDisabled,
+  timeout,
+  unknown;
+}
+        </div>
+
+        <h3>Error Propagation</h3>
+        <div class="code-block">
+// Infrastructure → Domain
+try {
+  final response = await http.get(uri);
+  // Process response...
+  return Result.success(addresses);
+} on SocketException {
+  return const Result.failure(AddressError.networkError);
+} on TimeoutException {
+  return const Result.failure(AddressError.timeout);
+} catch (e) {
+  return const Result.failure(AddressError.unknown);
+}
+
+// Application → Presentation
+result.when(
+  success: (addresses) =&gt; emit(state.copyWith(
+    searchState: DataState.success(addresses),
+  )),
+  failure: (error) =&gt; emit(state.copyWith(
+    searchState: DataState.error(_getErrorMessage(error)),
+  )),
+);
+        </div>
+
+        <h2 id="data-flow">Data Flow</h2>
+        
+        <h3>Typical Request Flow</h3>
+        <ol>
+            <li><strong>User Action:</strong> User types in search field</li>
+            <li><strong>Presentation:</strong> Widget calls <code>cubit.searchAddresses(query)</code></li>
+            <li><strong>Application:</strong> Cubit validates input and calls domain service</li>
+            <li><strong>Domain:</strong> Interface defines contract for address search</li>
+            <li><strong>Infrastructure:</strong> Service makes API call to Nominatim</li>
+            <li><strong>Infrastructure:</strong> DTO converts API response to domain model</li>
+            <li><strong>Application:</strong> Cubit updates state with results</li>
+            <li><strong>Presentation:</strong> Widget rebuilds with new state</li>
+        </ol>
+
+        <h3>Data Transformation</h3>
+        <div class="code-block">
+// API Response → DTO → Domain Model → UI State
+
+Map&lt;String, dynamic&gt; apiResponse = { "display_name": "Copenhagen", ... };
+                ↓
+AddressSuggestionDto dto = AddressSuggestionDto.fromJson(apiResponse);
+                ↓  
+AddressSuggestion model = dto.toDomain();
+                ↓
+DataState&lt;List&lt;AddressSuggestion&gt;&gt; state = DataState.success([model]);
+                ↓
+Widget displays address suggestions
+        </div>
+
+        <div class="nav-links">
+            <a href="index.html">← Back to Documentation</a>
+            <a href="api-reference.html">Next: API Reference →</a>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - OSM Address Finder</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6f42c1 0%, #563d7c 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .api-endpoint {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+        }
+        
+        .method.get { background: #4caf50; color: white; }
+        .method.post { background: #ff9800; color: white; }
+        .method.put { background: #2196f3; color: white; }
+        .method.delete { background: #f44336; color: white; }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .json-block {
+            background: #1a202c;
+            color: #68d391;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .nav-links a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+        
+        .nav-links a:hover {
+            background: #e9ecef;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .status-code {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .status-200 { background: #d4edda; color: #155724; }
+        .status-400 { background: #f8d7da; color: #721c24; }
+        .status-429 { background: #fff3cd; color: #856404; }
+        .status-500 { background: #f5c6cb; color: #721c24; }
+        
+        .toc {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            border-left: 4px solid #6f42c1;
+        }
+        
+        .interface {
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌐 API Reference</h1>
+        <p>Technical specifications for external APIs and internal service interfaces</p>
+    </div>
+
+    <div class="content">
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#nominatim">Nominatim OpenStreetMap API</a></li>
+                <li><a href="#internal">Internal Service Interfaces</a></li>
+                <li><a href="#models">Data Models</a></li>
+                <li><a href="#errors">Error Handling</a></li>
+                <li><a href="#examples">Usage Examples</a></li>
+            </ul>
+        </div>
+
+        <h2 id="nominatim">Nominatim OpenStreetMap API</h2>
+        
+        <p>The Nominatim API provides geocoding and reverse geocoding services using OpenStreetMap data.</p>
+
+        <div class="api-endpoint">
+            <h3><span class="method get">GET</span> Search Endpoint</h3>
+            <p><strong>URL:</strong> <code>https://nominatim.openstreetmap.org/search</code></p>
+            <p><strong>Purpose:</strong> Search for addresses and places worldwide</p>
+        </div>
+
+        <h3>Request Parameters</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Required</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>q</code></td>
+                    <td>string</td>
+                    <td>Yes</td>
+                    <td>Search query string</td>
+                    <td>Copenhagen, Denmark</td>
+                </tr>
+                <tr>
+                    <td><code>format</code></td>
+                    <td>string</td>
+                    <td>Yes</td>
+                    <td>Response format</td>
+                    <td>json</td>
+                </tr>
+                <tr>
+                    <td><code>addressdetails</code></td>
+                    <td>integer</td>
+                    <td>No</td>
+                    <td>Include detailed address breakdown</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td><code>limit</code></td>
+                    <td>integer</td>
+                    <td>No</td>
+                    <td>Maximum number of results (1-50)</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td><code>countrycodes</code></td>
+                    <td>string</td>
+                    <td>No</td>
+                    <td>Restrict to specific countries (ISO 3166-1)</td>
+                    <td>dk,se,no</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Example Request</h3>
+        <div class="code-block">
+GET https://nominatim.openstreetmap.org/search?q=Copenhagen&format=json&addressdetails=1&limit=8
+        </div>
+
+        <h3>Response Format</h3>
+        <div class="json-block">
+[
+  {
+    "place_id": 282375588,
+    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+    "osm_type": "relation",
+    "osm_id": 2192363,
+    "boundingbox": ["55.615398", "55.7311892", "12.4538", "12.6516"],
+    "lat": "55.6867243",
+    "lon": "12.5700724",
+    "display_name": "Copenhagen, Capital Region of Denmark, Denmark",
+    "class": "place",
+    "type": "city",
+    "importance": 0.8506717840740555,
+    "icon": "https://nominatim.openstreetmap.org/ui/mapicons/poi_place_city.p.20.png",
+    "address": {
+      "city": "Copenhagen",
+      "state": "Capital Region of Denmark",
+      "country": "Denmark",
+      "country_code": "dk"
+    }
+  }
+]
+        </div>
+
+        <h3>Response Status Codes</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Status Code</th>
+                    <th>Description</th>
+                    <th>Handling</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="status-code status-200">200</span></td>
+                    <td>Success - Results found</td>
+                    <td>Process results normally</td>
+                </tr>
+                <tr>
+                    <td><span class="status-code status-200">200</span></td>
+                    <td>Success - Empty array (no results)</td>
+                    <td>Show "no results found" message</td>
+                </tr>
+                <tr>
+                    <td><span class="status-code status-400">400</span></td>
+                    <td>Bad Request - Invalid parameters</td>
+                    <td>Show error message to user</td>
+                </tr>
+                <tr>
+                    <td><span class="status-code status-429">429</span></td>
+                    <td>Too Many Requests - Rate limited</td>
+                    <td>Show rate limit message, implement backoff</td>
+                </tr>
+                <tr>
+                    <td><span class="status-code status-500">500</span></td>
+                    <td>Server Error</td>
+                    <td>Show generic error, allow retry</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Rate Limiting</h3>
+        <ul>
+            <li><strong>Limit:</strong> 1 request per second per IP</li>
+            <li><strong>Bulk Requests:</strong> Not recommended for real-time applications</li>
+            <li><strong>User-Agent:</strong> Should identify your application</li>
+            <li><strong>Caching:</strong> Results should be cached when possible</li>
+        </ul>
+
+        <h2 id="internal">Internal Service Interfaces</h2>
+
+        <div class="interface">
+            <h3>IAddressService</h3>
+            <p><strong>Purpose:</strong> Contract for address search functionality</p>
+        </div>
+
+        <div class="code-block">
+abstract class IAddressService {
+  /// Searches for addresses matching the given query.
+  /// 
+  /// Returns [Result.success] with list of address suggestions on success.
+  /// Returns [Result.failure] with [AddressError] on failure.
+  /// 
+  /// Throws no exceptions - all errors are captured in Result.
+  Future&lt;Result&lt;List&lt;AddressSuggestion&gt;, AddressError&gt;&gt; searchAddresses(String query);
+}
+        </div>
+
+        <h4>Method: searchAddresses</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>query</td>
+                    <td>String</td>
+                    <td>Search query (minimum 3 characters)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Return Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Result&lt;List&lt;AddressSuggestion&gt;, AddressError&gt;</td>
+                    <td>Success with suggestions or failure with error</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="interface">
+            <h3>ILocationService</h3>
+            <p><strong>Purpose:</strong> Contract for device location functionality</p>
+        </div>
+
+        <div class="code-block">
+abstract class ILocationService {
+  /// Gets the current device location.
+  /// 
+  /// Returns [Result.success] with [LatLng] coordinates on success.
+  /// Returns [Result.failure] with [LocationError] on failure.
+  /// 
+  /// Handles permission requests automatically.
+  Future&lt;Result&lt;LatLng, LocationError&gt;&gt; getCurrentLocation();
+  
+  /// Checks if location services are available without requesting.
+  /// 
+  /// Returns true if location can potentially be obtained.
+  Future&lt;bool&gt; isLocationAvailable();
+}
+        </div>
+
+        <h2 id="models">Data Models</h2>
+
+        <h3>AddressSuggestion (Domain Model)</h3>
+        <div class="code-block">
+@freezed
+class AddressSuggestion with _$AddressSuggestion {
+  const factory AddressSuggestion({
+    @Default('') String displayName,
+    @Default(0.0) double latitude,
+    @Default(0.0) double longitude,
+    @Default('') String addressType,
+    @Default('') String category,
+    @Default('') String osmId,
+    @Default('') String osmType,
+    @Default(0.0) double importance,
+  }) = _AddressSuggestion;
+}
+        </div>
+
+        <h4>Field Descriptions</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>displayName</td>
+                    <td>String</td>
+                    <td>Human-readable address</td>
+                    <td>"Copenhagen, Capital Region of Denmark, Denmark"</td>
+                </tr>
+                <tr>
+                    <td>latitude</td>
+                    <td>double</td>
+                    <td>Decimal degrees latitude</td>
+                    <td>55.6867243</td>
+                </tr>
+                <tr>
+                    <td>longitude</td>
+                    <td>double</td>
+                    <td>Decimal degrees longitude</td>
+                    <td>12.5700724</td>
+                </tr>
+                <tr>
+                    <td>addressType</td>
+                    <td>String</td>
+                    <td>OSM place type</td>
+                    <td>"city", "street", "house"</td>
+                </tr>
+                <tr>
+                    <td>category</td>
+                    <td>String</td>
+                    <td>OSM category</td>
+                    <td>"place", "highway", "building"</td>
+                </tr>
+                <tr>
+                    <td>osmId</td>
+                    <td>String</td>
+                    <td>OpenStreetMap object ID</td>
+                    <td>"2192363"</td>
+                </tr>
+                <tr>
+                    <td>osmType</td>
+                    <td>String</td>
+                    <td>OSM object type</td>
+                    <td>"relation", "way", "node"</td>
+                </tr>
+                <tr>
+                    <td>importance</td>
+                    <td>double</td>
+                    <td>Search relevance score (0.0-1.0)</td>
+                    <td>0.8506717840740555</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>AddressSuggestionDto (Infrastructure Model)</h3>
+        <div class="code-block">
+@freezed
+class AddressSuggestionDto with _$AddressSuggestionDto {
+  const factory AddressSuggestionDto({
+    @Default('') @JsonKey(name: 'display_name') String displayName,
+    @Default('') String lat,
+    @Default('') String lon,
+    @Default('') String type,
+    @Default('') String category,
+    @Default('') @JsonKey(name: 'osm_id') String osmId,
+    @Default('') @JsonKey(name: 'osm_type') String osmType,
+    @Default('') String importance,
+  }) = _AddressSuggestionDto;
+
+  factory AddressSuggestionDto.fromJson(Map&lt;String, dynamic&gt; json) =&gt; 
+      _$AddressSuggestionDtoFromJson(json);
+}
+
+extension AddressSuggestionDtoX on AddressSuggestionDto {
+  AddressSuggestion toDomain() =&gt; AddressSuggestion(
+    displayName: displayName,
+    latitude: double.tryParse(lat) ?? 0.0,
+    longitude: double.tryParse(lon) ?? 0.0,
+    addressType: type,
+    category: category,
+    osmId: osmId,
+    osmType: osmType,
+    importance: double.tryParse(importance) ?? 0.0,
+  );
+}
+        </div>
+
+        <h2 id="errors">Error Handling</h2>
+
+        <h3>AddressError Enum</h3>
+        <div class="code-block">
+enum AddressError {
+  /// No network connection available
+  networkError,
+  
+  /// Request timed out
+  timeout,
+  
+  /// No results found for query
+  noResults,
+  
+  /// Query too short or invalid
+  invalidQuery,
+  
+  /// API rate limit exceeded
+  rateLimited,
+  
+  /// Unknown or unexpected error
+  unknown;
+}
+        </div>
+
+        <h3>LocationError Enum</h3>
+        <div class="code-block">
+enum LocationError {
+  /// User denied location permission
+  permissionDenied,
+  
+  /// Location services disabled
+  serviceDisabled,
+  
+  /// Location request timed out
+  timeout,
+  
+  /// Unknown location error
+  unknown;
+}
+        </div>
+
+        <h3>Error Mapping</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>HTTP Status</th>
+                    <th>Exception Type</th>
+                    <th>Mapped Error</th>
+                    <th>User Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>200 (empty array)</td>
+                    <td>-</td>
+                    <td>AddressError.noResults</td>
+                    <td>"Ingen adresser fundet"</td>
+                </tr>
+                <tr>
+                    <td>400, 422</td>
+                    <td>HttpException</td>
+                    <td>AddressError.invalidQuery</td>
+                    <td>"Ugyldig søgning"</td>
+                </tr>
+                <tr>
+                    <td>429</td>
+                    <td>HttpException</td>
+                    <td>AddressError.rateLimited</td>
+                    <td>"For mange forespørgsler. Prøv igen om et øjeblik"</td>
+                </tr>
+                <tr>
+                    <td>-</td>
+                    <td>SocketException</td>
+                    <td>AddressError.networkError</td>
+                    <td>"Ingen internetforbindelse"</td>
+                </tr>
+                <tr>
+                    <td>-</td>
+                    <td>TimeoutException</td>
+                    <td>AddressError.timeout</td>
+                    <td>"Forbindelsen fik timeout"</td>
+                </tr>
+                <tr>
+                    <td>500, 502, 503</td>
+                    <td>HttpException</td>
+                    <td>AddressError.unknown</td>
+                    <td>"Der opstod en fejl. Prøv igen"</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="examples">Usage Examples</h2>
+
+        <h3>Address Search Implementation</h3>
+        <div class="code-block">
+class NominatimService implements IAddressService {
+  final http.Client _client;
+  
+  @override
+  Future&lt;Result&lt;List&lt;AddressSuggestion&gt;, AddressError&gt;&gt; searchAddresses(
+    String query,
+  ) async {
+    if (query.trim().length &lt; 3) {
+      return const Result.failure(AddressError.invalidQuery);
+    }
+    
+    try {
+      final uri = Uri.parse(NominatimApiKeys.searchEndpoint).replace(
+        queryParameters: {
+          'q': query.trim(),
+          'format': 'json',
+          'addressdetails': '1',
+          'limit': '8',
+        },
+      );
+      
+      final response = await _client.get(uri).timeout(
+        const Duration(seconds: 10),
+      );
+      
+      if (response.statusCode == 200) {
+        final List&lt;dynamic&gt; data = json.decode(response.body);
+        
+        if (data.isEmpty) {
+          return const Result.failure(AddressError.noResults);
+        }
+        
+        final suggestions = data
+            .map((json) =&gt; AddressSuggestionDto.fromJson(json))
+            .map((dto) =&gt; dto.toDomain())
+            .toList();
+            
+        return Result.success(suggestions);
+      } else if (response.statusCode == 429) {
+        return const Result.failure(AddressError.rateLimited);
+      } else {
+        return const Result.failure(AddressError.unknown);
+      }
+    } on SocketException {
+      return const Result.failure(AddressError.networkError);
+    } on TimeoutException {
+      return const Result.failure(AddressError.timeout);
+    } catch (e) {
+      return const Result.failure(AddressError.unknown);
+    }
+  }
+}
+        </div>
+
+        <h3>Using the Service in a Cubit</h3>
+        <div class="code-block">
+class AddressSearchCubit extends Cubit&lt;AddressSearchState&gt; {
+  final IAddressService _addressService;
+  
+  Future&lt;void&gt; searchAddresses(String query) async {
+    emit(state.copyWith(searchState: const DataState.loading()));
+    
+    final result = await _addressService.searchAddresses(query);
+    
+    result.when(
+      success: (suggestions) =&gt; emit(state.copyWith(
+        searchState: DataState.success(suggestions),
+        showSuggestions: suggestions.isNotEmpty,
+      )),
+      failure: (error) =&gt; emit(state.copyWith(
+        searchState: DataState.error(_getErrorMessage(error)),
+        showSuggestions: false,
+      )),
+    );
+  }
+  
+  String _getErrorMessage(AddressError error) {
+    switch (error) {
+      case AddressError.noResults:
+        return 'Ingen adresser fundet';
+      case AddressError.networkError:
+        return 'Ingen internetforbindelse';
+      case AddressError.timeout:
+        return 'Forbindelsen fik timeout';
+      case AddressError.rateLimited:
+        return 'For mange forespørgsler. Prøv igen om et øjeblik';
+      case AddressError.invalidQuery:
+        return 'Indtast mindst 3 tegn';
+      case AddressError.unknown:
+        return 'Der opstod en fejl. Prøv igen';
+    }
+  }
+}
+        </div>
+
+        <div class="nav-links">
+            <a href="architecture-reference.html">← Architecture Reference</a>
+            <a href="codebase-structure.html">Next: Codebase Structure →</a>
+        </div>
+    </div>
+</body>
+</html> 

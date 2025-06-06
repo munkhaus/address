@@ -5,7 +5,16 @@ enum LocationError {
   unknown,
 }
 
-enum ApiError {
+enum RouteError {
+  invalidPoints,
+  routeNotFound,
+  networkError,
+  serverError,
+  serviceUnavailable,
+  unknown,
+}
+
+enum AddressError {
   networkError,
   serverError,
   searchQueryTooShort,
